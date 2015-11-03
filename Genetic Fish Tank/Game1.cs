@@ -13,6 +13,8 @@ namespace Genetic_Fish_Tank
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            IsMouseVisible = true;
         }
 
         protected override void Initialize()
@@ -25,10 +27,7 @@ namespace Genetic_Fish_Tank
             spriteBatch = new SpriteBatch(GraphicsDevice);
         }
 
-        protected override void UnloadContent()
-        {
-
-        }
+        protected override void UnloadContent() { }
         
         protected override void Update(GameTime gameTime)
         {
@@ -40,7 +39,7 @@ namespace Genetic_Fish_Tank
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.LightBlue);
 
             base.Draw(gameTime);
         }
