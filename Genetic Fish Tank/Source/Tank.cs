@@ -1,6 +1,6 @@
 ﻿namespace Genetic_Fish_Tank.Source
 {
-    class Main
+    class Tank
     {
     }
 }
