@@ -9,12 +9,19 @@ namespace Genetic_Fish_Tank
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        Source.Tank tank = new Source.Tank();
+
+        public static int screenWidth, screenHeight;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
             IsMouseVisible = true;
+
+            screenWidth = graphics.PreferredBackBufferWidth;
+            screenHeight = graphics.PreferredBackBufferHeight;
         }
 
         protected override void Initialize()
@@ -25,6 +32,8 @@ namespace Genetic_Fish_Tank
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            tank.LoadContent(Content, GraphicsDevice);
         }
 
         protected override void UnloadContent() { }
@@ -33,13 +42,18 @@ namespace Genetic_Fish_Tank
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            
+
+            tank.Update(gameTime);
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.LightBlue);
+
+            spriteBatch.Begin();
+            tank.Draw(spriteBatch);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
