@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System;
 
 namespace Genetic_Fish_Tank.Source
@@ -9,12 +8,14 @@ namespace Genetic_Fish_Tank.Source
     class Fish
     {
         NeuralNetwork brain;
-        Sensor inputSensor;
+        ProximitySensor proximitySensor;
 
         Texture2D texture;
         Vector2 position;
         
         Vector2 origin;
+
+        Food closestFood;
 
         static Random random = new Random();
 
@@ -50,23 +51,25 @@ namespace Genetic_Fish_Tank.Source
 
             rotation = 90;
 
-            inputSensor = new Sensor((int)(position.X), (int)(position.Y), rotation);
+            proximitySensor = new ProximitySensor();
         }
 
         public void Update(GameTime gameTime)
         {
+            closestFood = proximitySensor.GetClosestFood(FishRectangle, Tank.foodList);
             int[] input = new int[2];
-
+            if (closestFood.FoodRectangle.X + closestFood.FoodRectangle.Width < rectangle.X) input[0] = 1;
+            else input[0] = 0;
+            if (closestFood.FoodRectangle.X > rectangle.X + rectangle.Width) input[1] = 1;
+            else input[1] = 0;
             brain.SendInput(input);
 
             rectangle = new Rectangle((int)(position.X), (int)(position.Y), texture.Width, texture.Height);
-            inputSensor.Update(gameTime, (int)(position.X), (int)(position.Y), rotation);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, position, null, Color.White, MathHelper.ToRadians(rotation), origin, 1f, SpriteEffects.None, 0);
-            inputSensor.Draw(spriteBatch);
         }
     }
 
@@ -95,6 +98,26 @@ namespace Genetic_Fish_Tank.Source
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, position, null, Color.White, MathHelper.ToRadians(rotation), origin, 1f, SpriteEffects.None, 0);
+        }
+    }
+
+    class ProximitySensor
+    {
+        public Food GetClosestFood(Rectangle rectangle, Food[] foodList)
+        {
+            int closestID = 0;
+            float closestValue = Math.Abs(rectangle.X - foodList[0].FoodRectangle.X) + Math.Abs(rectangle.Y - foodList[0].FoodRectangle.Y);
+
+            for (int x = 0; x < foodList.Length; x++)
+            {
+                if (Math.Abs(rectangle.X - foodList[x].FoodRectangle.X) + Math.Abs(rectangle.Y - foodList[x].FoodRectangle.Y) < closestValue)
+                {
+                    closestID = x;
+                    closestValue = Math.Abs(rectangle.X - foodList[x].FoodRectangle.X) + Math.Abs(rectangle.Y - foodList[x].FoodRectangle.Y);
+                }
+            }
+
+            return foodList[closestID];
         }
     }
 }
