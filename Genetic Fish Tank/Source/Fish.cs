@@ -81,8 +81,6 @@ namespace Genetic_Fish_Tank.Source
         int rotation;
         Vector2 origin;
 
-        public Vector2 theoreticalPosition;
-
         public Sensor(int x, int y, int z)
         {
             texture = Fish.Content.Load<Texture2D>("Sprites/fishsensor.png");
@@ -95,9 +93,6 @@ namespace Genetic_Fish_Tank.Source
         {
             position = new Vector2(x, y);
             rotation = z;
-
-            theoreticalPosition.X = (float)(position.X * Math.Cos(rotation)) - (float)(position.Y * Math.Sin(rotation));
-            theoreticalPosition.Y = (float)(position.X * Math.Sin(rotation)) + (float)(position.Y * Math.Cos(rotation));
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -114,6 +109,8 @@ namespace Genetic_Fish_Tank.Source
         int rotation;
         Vector2 origin;
 
+        public Vector2 theoreticalPosition;
+
         public ProximitySensor(int x, int y, int z, int offset)
         {
             texture = Fish.Content.Load<Texture2D>("Sprites/proximitysensor.png");
@@ -126,6 +123,9 @@ namespace Genetic_Fish_Tank.Source
         {
             position = new Vector2(x, y);
             rotation = z;
+
+            theoreticalPosition.X = (float)(position.X * Math.Cos(rotation)) - (float)(position.Y * Math.Sin(rotation));
+            theoreticalPosition.Y = (float)(position.X * Math.Sin(rotation)) + (float)(position.Y * Math.Cos(rotation));
         }
 
         public void Draw(SpriteBatch spriteBatch)
