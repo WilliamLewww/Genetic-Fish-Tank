@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 
 namespace Genetic_Fish_Tank.Source
@@ -48,18 +49,20 @@ namespace Genetic_Fish_Tank.Source
             origin = new Vector2(texture.Width / 2, texture.Height / 2);
 
             rotation = 90;
-            proximitySensor[0] = new ProximitySensor((int)(position.X), (int)(position.Y), rotation, -5);
-            proximitySensor[1] = new ProximitySensor((int)(position.X), (int)(position.Y), rotation, 5);
+            proximitySensor[0] = new ProximitySensor((int)(position.X), (int)(position.Y), rotation, -16);
+            proximitySensor[1] = new ProximitySensor((int)(position.X), (int)(position.Y), rotation, 16);
         }
 
         public void Update(GameTime gameTime)
         {
             int[] input = new int[2];
 
-            foreach (ProximitySensor sensor in proximitySensor)
-                sensor.Update(gameTime, (int)(position.X), (int)(position.Y), rotation);
+            proximitySensor[0].Update(gameTime, (int)(position.X), (int)(position.Y), rotation, 8);
+            proximitySensor[1].Update(gameTime, (int)(position.X), (int)(position.Y), rotation, -8);
 
             brain.SendInput(input);
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Space)) rotation += 1;
 
             rectangle = new Rectangle((int)(position.X), (int)(position.Y), texture.Width, texture.Height);
         }
@@ -106,31 +109,32 @@ namespace Genetic_Fish_Tank.Source
         Texture2D texture;
         Vector2 position;
 
-        int rotation;
-        Vector2 origin;
-
-        public Vector2 theoreticalPosition;
+        Vector2 theoreticalPosition;
+        Vector2 theoreticalCenter;
+        Vector2 theorecticalCornerPoint;
+        Vector2 temp;
 
         public ProximitySensor(int x, int y, int z, int offset)
         {
             texture = Fish.Content.Load<Texture2D>("Sprites/proximitysensor.png");
             position = new Vector2(x, y);
-            origin = new Vector2(texture.Width / 2 + offset, texture.Height / 2 + 20);
-            rotation = z;
         }
 
-        public void Update(GameTime gameTime, int x, int y, int z)
+        public void Update(GameTime gameTime, int x, int y, int z, int offset)
         {
             position = new Vector2(x, y);
-            rotation = z;
 
-            theoreticalPosition.X = (float)(position.X * Math.Cos(rotation)) - (float)(position.Y * Math.Sin(rotation));
-            theoreticalPosition.Y = (float)(position.X * Math.Sin(rotation)) + (float)(position.Y * Math.Cos(rotation));
+            theoreticalCenter = new Vector2(x + offset, y + 16);
+            theorecticalCornerPoint = new Vector2(x, y);
+            temp = theorecticalCornerPoint - theoreticalCenter;
+
+            theoreticalPosition.X = (float)(temp.X * Math.Cos(MathHelper.ToRadians(z)) - temp.Y * Math.Sin(MathHelper.ToRadians(z)));
+            theoreticalPosition.Y = (float)(temp.X * Math.Sin(MathHelper.ToRadians(z)) + temp.Y * Math.Cos(MathHelper.ToRadians(z)));
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, position, null, Color.White, MathHelper.ToRadians(rotation), origin, 1f, SpriteEffects.None, 0);
+            spriteBatch.Draw(texture, theoreticalPosition + theorecticalCornerPoint, Color.White);
         }
     }
 
