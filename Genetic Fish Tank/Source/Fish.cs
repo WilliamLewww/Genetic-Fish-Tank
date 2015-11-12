@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System;
 
 namespace Genetic_Fish_Tank.Source
@@ -9,12 +8,16 @@ namespace Genetic_Fish_Tank.Source
     class Fish
     {
         NeuralNetwork brain;
+
         ProximitySensor[] proximitySensor = new ProximitySensor[2];
+        UniversalSensorFunctions sensorFunctions = new UniversalSensorFunctions();
 
         Texture2D texture;
         Vector2 position;
         
         Vector2 origin;
+
+        Food closest, closestLeft, closestRight;
 
         static Random random = new Random();
 
@@ -39,6 +42,13 @@ namespace Genetic_Fish_Tank.Source
             set { rectangle = value; }
         }
 
+        public void Swim(float speed)
+        {
+            Vector2 direction = new Vector2((float)Math.Cos(MathHelper.ToRadians(rotation - 90)), (float)Math.Sin(MathHelper.ToRadians(rotation - 90)));
+            direction.Normalize();
+            position += direction * speed;
+        }
+
         public Fish()
         {
             texture = content.Load<Texture2D>("Sprites/fish.png");
@@ -55,14 +65,20 @@ namespace Genetic_Fish_Tank.Source
 
         public void Update(GameTime gameTime)
         {
-            int[] input = new int[2];
-
             proximitySensor[0].Update(gameTime, (int)(position.X), (int)(position.Y), rotation, 8);
             proximitySensor[1].Update(gameTime, (int)(position.X), (int)(position.Y), rotation, -8);
 
-            brain.SendInput(input);
+            closestLeft = sensorFunctions.GetClosestFood(proximitySensor[1].rotatedPosition, Tank.foodList);
+            closestRight = sensorFunctions.GetClosestFood(proximitySensor[0].rotatedPosition, Tank.foodList);
+            closest = sensorFunctions.CompareClosest(new Vector2(position.X + (texture.Width / 2), position.Y + (texture.Height / 2)), closestLeft, closestRight);
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Space)) rotation += 1;
+            int[] input = new int[2];
+
+            if (sensorFunctions.GetClosestSensor(closest, proximitySensor[1], proximitySensor[0])) rotation += 1;
+            else rotation -= 1;
+
+            brain.SendInput(input);
+            Swim(.5f);
 
             rectangle = new Rectangle((int)(position.X), (int)(position.Y), texture.Width, texture.Height);
         }
@@ -114,6 +130,11 @@ namespace Genetic_Fish_Tank.Source
         Vector2 theorecticalCornerPoint;
         Vector2 temp;
 
+        public Vector2 rotatedPosition
+        {
+            get { return theoreticalPosition + theorecticalCornerPoint; }
+        }
+
         public ProximitySensor(int x, int y, int z, int offset)
         {
             texture = Fish.Content.Load<Texture2D>("Sprites/proximitysensor.png");
@@ -140,6 +161,14 @@ namespace Genetic_Fish_Tank.Source
 
     class UniversalSensorFunctions
     {
+        public bool GetClosestSensor(Food food, ProximitySensor sensorA, ProximitySensor sensorB)
+        {
+            if (Math.Abs(food.FoodRectangle.X - sensorA.rotatedPosition.X) + Math.Abs(food.FoodRectangle.Y - sensorA.rotatedPosition.Y) < Math.Abs(food.FoodRectangle.X - sensorB.rotatedPosition.X) + Math.Abs(food.FoodRectangle.Y - sensorB.rotatedPosition.Y))
+                return true;
+
+            return false;
+        }
+
         public Food GetClosestFood(Vector2 position, Food[] foodList)
         {
             int closestID = 0;
@@ -157,12 +186,12 @@ namespace Genetic_Fish_Tank.Source
             return foodList[closestID];
         }
 
-        public bool CompareClosest(Vector2 position, Food foodLeft, Food foodRight)
+        public Food CompareClosest(Vector2 position, Food foodLeft, Food foodRight)
         {
             if (Math.Abs(position.X - foodLeft.FoodRectangle.X) + Math.Abs(position.Y - foodLeft.FoodRectangle.Y) < Math.Abs(position.X - foodRight.FoodRectangle.X) + Math.Abs(position.Y - foodRight.FoodRectangle.Y))
-                return true;
+                return foodLeft;
 
-            return false;
+            return foodRight;
         }
     }
 }
