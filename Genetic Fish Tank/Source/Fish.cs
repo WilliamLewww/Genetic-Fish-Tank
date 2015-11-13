@@ -9,7 +9,7 @@ namespace Genetic_Fish_Tank.Source
     {
         NeuralNetwork brain;
 
-        ProximitySensor[] proximitySensor = new ProximitySensor[2];
+        ProximitySensor[] proximitySensor = new ProximitySensor[3];
         UniversalSensorFunctions sensorFunctions = new UniversalSensorFunctions();
 
         Texture2D texture;
@@ -59,20 +59,22 @@ namespace Genetic_Fish_Tank.Source
             origin = new Vector2(texture.Width / 2, texture.Height / 2);
 
             rotation = 90;
-            proximitySensor[0] = new ProximitySensor((int)(position.X), (int)(position.Y), rotation, -16);
-            proximitySensor[1] = new ProximitySensor((int)(position.X), (int)(position.Y), rotation, 16);
+            proximitySensor[0] = new ProximitySensor((int)(position.X), (int)(position.Y));
+            proximitySensor[1] = new ProximitySensor((int)(position.X), (int)(position.Y));
+            proximitySensor[2] = new ProximitySensor((int)(position.X), (int)(position.Y));
         }
 
         public void Update(GameTime gameTime)
         {
-            proximitySensor[0].Update(gameTime, (int)(position.X), (int)(position.Y), rotation, 8);
-            proximitySensor[1].Update(gameTime, (int)(position.X), (int)(position.Y), rotation, -8);
+            proximitySensor[0].Update(gameTime, (int)(position.X), (int)(position.Y), rotation, 8, 16);
+            proximitySensor[1].Update(gameTime, (int)(position.X), (int)(position.Y), rotation, -8, 16);
+            proximitySensor[2].Update(gameTime, (int)(position.X), (int)(position.Y), rotation, 0, -20);
 
             closestLeft = sensorFunctions.GetClosestFood(proximitySensor[1].rotatedPosition, Tank.foodList);
             closestRight = sensorFunctions.GetClosestFood(proximitySensor[0].rotatedPosition, Tank.foodList);
             closest = sensorFunctions.CompareClosest(new Vector2(position.X + (texture.Width / 2), position.Y + (texture.Height / 2)), closestLeft, closestRight);
 
-            int[] input = new int[2];
+            int[] input = new int[3];
 
             if (sensorFunctions.GetClosestSensor(closest, proximitySensor[1], proximitySensor[0])) rotation += 1;
             else rotation -= 1;
@@ -135,17 +137,17 @@ namespace Genetic_Fish_Tank.Source
             get { return theoreticalPosition + theorecticalCornerPoint; }
         }
 
-        public ProximitySensor(int x, int y, int z, int offset)
+        public ProximitySensor(int x, int y)
         {
             texture = Fish.Content.Load<Texture2D>("Sprites/proximitysensor.png");
             position = new Vector2(x, y);
         }
 
-        public void Update(GameTime gameTime, int x, int y, int z, int offset)
+        public void Update(GameTime gameTime, int x, int y, int z, int offsetX, int offsetY)
         {
             position = new Vector2(x, y);
 
-            theoreticalCenter = new Vector2(x + offset, y + 16);
+            theoreticalCenter = new Vector2(x + offsetX, y + offsetY);
             theorecticalCornerPoint = new Vector2(x, y);
             temp = theorecticalCornerPoint - theoreticalCenter;
 
