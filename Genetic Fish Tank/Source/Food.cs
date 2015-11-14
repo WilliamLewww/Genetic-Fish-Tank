@@ -31,8 +31,8 @@ namespace Genetic_Fish_Tank.Source
             texture = content.Load<Texture2D>("Sprites/food.png");
 
         Search:
-            int randomX = random.Next(Game1.screenWidth - texture.Width);
-            int randomY = random.Next(Game1.screenHeight - texture.Height);
+            int randomX = random.Next((Game1.screenWidth - Game1.theoreticalScreenWidth) / 2, ((Game1.screenWidth - Game1.theoreticalScreenWidth) / 2) + Game1.theoreticalScreenWidth - texture.Width);
+            int randomY = random.Next((Game1.screenHeight - Game1.theoreticalScreenHeight) / 2, ((Game1.screenHeight - Game1.theoreticalScreenHeight) / 2) + Game1.theoreticalScreenHeight - texture.Height);
             rectangle = new Rectangle(randomX, randomY, texture.Width, texture.Height);
 
             foreach (Fish fish in Tank.fishList)
