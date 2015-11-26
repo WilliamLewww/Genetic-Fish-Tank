@@ -9,6 +9,8 @@ namespace Genetic_Fish_Tank.Source
     {
         NeuralNetwork brain;
 
+        CollisionCircle collisionCircle;
+
         ProximitySensor[] proximitySensor = new ProximitySensor[3];
         UniversalSensorFunctions sensorFunctions = new UniversalSensorFunctions();
 
@@ -53,6 +55,7 @@ namespace Genetic_Fish_Tank.Source
         {
             texture = content.Load<Texture2D>("Sprites/fish.png");
             brain = new NeuralNetwork(2, 1, 3);
+            collisionCircle = new CollisionCircle();
 
             position = new Vector2(random.Next((Game1.screenWidth - Game1.theoreticalScreenWidth) / 2, ((Game1.screenWidth - Game1.theoreticalScreenWidth) / 2) + Game1.theoreticalScreenWidth - texture.Width), random.Next((Game1.screenHeight - Game1.theoreticalScreenHeight) / 2, ((Game1.screenHeight - Game1.theoreticalScreenHeight) / 2) + Game1.theoreticalScreenHeight - texture.Height));
             rectangle = new Rectangle((int)(position.X), (int)(position.Y), texture.Width, texture.Height);
@@ -66,6 +69,8 @@ namespace Genetic_Fish_Tank.Source
 
         public void Update(GameTime gameTime)
         {
+            collisionCircle.Update(gameTime, (int)(position.X - origin.X), (int)(position.Y - origin.Y));
+
             proximitySensor[0].Update(gameTime, (int)(position.X), (int)(position.Y), rotation, 8, 16);
             proximitySensor[1].Update(gameTime, (int)(position.X), (int)(position.Y), rotation, -8, 16);
             proximitySensor[2].Update(gameTime, (int)(position.X), (int)(position.Y), rotation, 0, -20);
@@ -91,10 +96,33 @@ namespace Genetic_Fish_Tank.Source
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            collisionCircle.Draw(spriteBatch);
+
             spriteBatch.Draw(texture, position, null, Color.White, MathHelper.ToRadians(rotation), origin, 1f, SpriteEffects.None, 0);
 
             foreach (ProximitySensor sensor in proximitySensor)
                 sensor.Draw(spriteBatch);
+        }
+    }
+
+    class CollisionCircle
+    {
+        Texture2D texture;
+        Vector2 position;
+
+        public CollisionCircle()
+        {
+            texture = Fish.Content.Load<Texture2D>("Sprites/fishcollision.png");
+        }
+
+        public void Update(GameTime gameTime, int x, int y)
+        {
+            position = new Vector2(x, y);
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(texture, position, new Color(255, 255, 255, 100));
         }
     }
 
