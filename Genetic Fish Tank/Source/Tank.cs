@@ -6,8 +6,8 @@ namespace Genetic_Fish_Tank.Source
 {
     class Tank
     {
-        public static Fish[] fishList = new Fish[500];
-        public static Food[] foodList = new Food[100];
+        public static Fish[] fishList = new Fish[20];
+        public static Food[] foodList = new Food[40];
 
         public void LoadContent(ContentManager content, GraphicsDevice graphics)
         {

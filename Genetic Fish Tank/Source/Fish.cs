@@ -129,8 +129,6 @@ namespace Genetic_Fish_Tank.Source
     class ProximitySensor
     {
         Texture2D texture;
-        Vector2 position;
-
         Vector2 theoreticalPosition;
         Vector2 theoreticalCenter;
         Vector2 theorecticalCornerPoint;
@@ -144,19 +142,16 @@ namespace Genetic_Fish_Tank.Source
         public ProximitySensor(int x, int y)
         {
             texture = Fish.Content.Load<Texture2D>("Sprites/proximitysensor.png");
-            position = new Vector2(x, y);
         }
 
         public void Update(GameTime gameTime, int x, int y, int z, int offsetX, int offsetY)
         {
-            position = new Vector2(x, y);
-
             theoreticalCenter = new Vector2(x + offsetX, y + offsetY);
             theorecticalCornerPoint = new Vector2(x, y);
             temp = theorecticalCornerPoint - theoreticalCenter;
 
-            theoreticalPosition.X = (float)(temp.X * Math.Cos(MathHelper.ToRadians(z)) - temp.Y * Math.Sin(MathHelper.ToRadians(z)));
-            theoreticalPosition.Y = (float)(temp.X * Math.Sin(MathHelper.ToRadians(z)) + temp.Y * Math.Cos(MathHelper.ToRadians(z)));
+            theoreticalPosition.X = (float)(temp.X * Math.Cos(MathHelper.ToRadians(z)) - temp.Y * Math.Sin(MathHelper.ToRadians(z))) - (texture.Width / 2);
+            theoreticalPosition.Y = (float)(temp.X * Math.Sin(MathHelper.ToRadians(z)) + temp.Y * Math.Cos(MathHelper.ToRadians(z))) - (texture.Height / 2);
         }
 
         public void Draw(SpriteBatch spriteBatch)
