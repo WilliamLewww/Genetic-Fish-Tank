@@ -108,11 +108,15 @@ namespace Genetic_Fish_Tank.Source
     class CollisionCircle
     {
         Texture2D texture;
+        Color[] textureData;
+
         Vector2 position;
 
         public CollisionCircle()
         {
             texture = Fish.Content.Load<Texture2D>("Sprites/fishcollision.png");
+            textureData = new Color[texture.Width * texture.Height];
+            texture.GetData(textureData);
         }
 
         public void Update(GameTime gameTime, int x, int y)
@@ -123,6 +127,28 @@ namespace Genetic_Fish_Tank.Source
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, position, new Color(255, 255, 255, 100));
+        }
+
+        bool PixelCollision(Rectangle rectangleA, Color[] dataA, Rectangle rectangleB, Color[] dataB)
+        {
+            int top = Math.Max(rectangleA.Top, rectangleB.Top);
+            int bottom = Math.Min(rectangleA.Bottom, rectangleB.Bottom);
+            int left = Math.Max(rectangleA.Left, rectangleB.Left);
+            int right = Math.Min(rectangleA.Right, rectangleB.Right);
+
+            for (int y = top; y < bottom; y++)
+            {
+                for (int x = left; x < right; x++)
+                {
+                    Color colorA = dataA[(x - rectangleA.Left) + (y - rectangleA.Top) * rectangleA.Width];
+                    Color colorB = dataB[(x - rectangleB.Left) + (y - rectangleB.Top) * rectangleB.Width];
+
+                    if (colorA.A != 0 && colorB.A != 0)
+                        return true;
+                }
+            }
+
+            return false;
         }
     }
 
