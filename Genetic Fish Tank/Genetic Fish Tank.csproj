@@ -58,6 +58,9 @@
     <Content Include="Content\Sprites\fish.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Sprites\fishcollision.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Sprites\fishsensor.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
