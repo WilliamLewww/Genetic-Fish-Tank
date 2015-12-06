@@ -84,14 +84,16 @@ namespace Genetic_Fish_Tank.Source
             closestRight = sensorFunctions.GetClosestFood(proximitySensor[0].rotatedPosition, Tank.foodList);
             closest = sensorFunctions.CompareClosest(new Vector2(x, y), closestLeft, closestRight);
 
-            int[] input = new int[3];
+            int[] input = new int[2];
 
-            if (sensorFunctions.GetClosestSensor(closest, proximitySensor[1], proximitySensor[0])) rotation += 1;
-            else if (sensorFunctions.GetClosestSensor(closest, proximitySensor[2], proximitySensor[1]) || sensorFunctions.GetClosestSensor(closest, proximitySensor[2], proximitySensor[0])) rotation += 1;
-            else rotation -= 1;
+            if (sensorFunctions.GetClosestSensor(closest, proximitySensor[1], proximitySensor[0])) input[1] = 1;
+            else if (sensorFunctions.GetClosestSensor(closest, proximitySensor[2], proximitySensor[1]) || sensorFunctions.GetClosestSensor(closest, proximitySensor[2], proximitySensor[0])) input[1] = 1;
+            else input[0] = 1;
 
             brain.SendInput(input);
-            Swim(.5f);
+            brain.EstablishRandomNetwork();
+            if (brain.GetOutput()[0] == 1) rotation -= 1;
+            if (brain.GetOutput()[1] == 1) rotation += 1;
 
             rectangle = new Rectangle((int)(position.X), (int)(position.Y), texture.Width, texture.Height);
         }
