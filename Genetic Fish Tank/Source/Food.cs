@@ -42,7 +42,8 @@ namespace Genetic_Fish_Tank.Source
             rectangle = new Rectangle(randomX, randomY, texture.Width, texture.Height);
 
             foreach (Fish fish in Tank.fishList)
-                if (rectangle.Intersects(fish.FishRectangle)) goto Search;
+                if (rectangle.Intersects(fish.collisionCircle.rectangle))
+                    goto Search;
 
             position = new Vector2(randomX, randomY);
         }

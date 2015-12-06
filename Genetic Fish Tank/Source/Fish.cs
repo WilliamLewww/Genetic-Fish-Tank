@@ -10,7 +10,7 @@ namespace Genetic_Fish_Tank.Source
     {
         NeuralNetwork brain;
 
-        CollisionCircle collisionCircle;
+        public CollisionCircle collisionCircle;
 
         ProximitySensor[] proximitySensor = new ProximitySensor[3];
         UniversalSensorFunctions sensorFunctions = new UniversalSensorFunctions();
@@ -56,11 +56,12 @@ namespace Genetic_Fish_Tank.Source
         {
             texture = content.Load<Texture2D>("Sprites/fish.png");
             brain = new NeuralNetwork(2, 1, 3);
-            collisionCircle = new CollisionCircle();
 
             position = new Vector2(random.Next((Game1.screenWidth - Game1.theoreticalScreenWidth) / 2, ((Game1.screenWidth - Game1.theoreticalScreenWidth) / 2) + Game1.theoreticalScreenWidth - texture.Width), random.Next((Game1.screenHeight - Game1.theoreticalScreenHeight) / 2, ((Game1.screenHeight - Game1.theoreticalScreenHeight) / 2) + Game1.theoreticalScreenHeight - texture.Height));
             rectangle = new Rectangle((int)(position.X), (int)(position.Y), texture.Width, texture.Height);
             origin = new Vector2(texture.Width / 2, texture.Height / 2);
+
+            collisionCircle = new CollisionCircle((int)(position.X - origin.X), (int)(position.Y - origin.Y));
 
             rotation = 90;
             proximitySensor[0] = new ProximitySensor((int)(position.X), (int)(position.Y));
@@ -111,16 +112,18 @@ namespace Genetic_Fish_Tank.Source
         static Texture2D texture;
         static Color[] textureData;
 
-        Vector2 position;
-        Rectangle rectangle;
+        public Vector2 position;
+        public Rectangle rectangle;
 
         public int score = 0;
 
-        public CollisionCircle()
+        public CollisionCircle(int x, int y)
         {
             texture = Fish.Content.Load<Texture2D>("Sprites/fishcollision.png");
             textureData = new Color[texture.Width * texture.Height];
             texture.GetData(textureData);
+
+            rectangle = new Rectangle(x, y, texture.Width, texture.Height);
         }
 
         public void Update(GameTime gameTime, int x, int y)
