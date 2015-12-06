@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 
 namespace Genetic_Fish_Tank.Source
 {
@@ -107,10 +108,13 @@ namespace Genetic_Fish_Tank.Source
 
     class CollisionCircle
     {
-        Texture2D texture;
-        Color[] textureData;
+        static Texture2D texture;
+        static Color[] textureData;
 
         Vector2 position;
+        Rectangle rectangle;
+
+        public int score = 0;
 
         public CollisionCircle()
         {
@@ -122,6 +126,16 @@ namespace Genetic_Fish_Tank.Source
         public void Update(GameTime gameTime, int x, int y)
         {
             position = new Vector2(x, y);
+            rectangle = new Rectangle(x, y, texture.Width, texture.Height);
+
+            foreach (Food food in Tank.foodList)
+            {
+                if (PixelCollision(rectangle, textureData, food.FoodRectangle, Food.textureData))
+                {
+                    score += 1;
+                    food.eaten = true;
+                }
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -224,12 +238,12 @@ namespace Genetic_Fish_Tank.Source
             return false;
         }
 
-        public Food GetClosestFood(Vector2 position, Food[] foodList)
+        public Food GetClosestFood(Vector2 position, List<Food> foodList)
         {
             int closestID = 0;
             float closestValue = Math.Abs(position.X - foodList[0].FoodRectangle.X) + Math.Abs(position.Y - foodList[0].FoodRectangle.Y);
 
-            for (int x = 0; x < foodList.Length; x++)
+            for (int x = 0; x < foodList.Count; x++)
             {
                 if (Math.Abs(position.X - foodList[x].FoodRectangle.X) + Math.Abs(position.Y - foodList[x].FoodRectangle.Y) < closestValue)
                 {

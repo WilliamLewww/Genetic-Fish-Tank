@@ -7,10 +7,14 @@ namespace Genetic_Fish_Tank.Source
 {
     class Food
     {
-        Texture2D texture;
+        static Texture2D texture;
+        public static Color[] textureData;
+
         Vector2 position;
 
         static Random random = new Random();
+
+        public bool eaten = false;
 
         private static ContentManager content;
         public static ContentManager Content
@@ -29,6 +33,8 @@ namespace Genetic_Fish_Tank.Source
         public Food()
         {
             texture = content.Load<Texture2D>("Sprites/food.png");
+            textureData = new Color[texture.Width * texture.Height];
+            texture.GetData(textureData);
 
         Search:
             int randomX = random.Next((Game1.screenWidth - Game1.theoreticalScreenWidth) / 2, ((Game1.screenWidth - Game1.theoreticalScreenWidth) / 2) + Game1.theoreticalScreenWidth - texture.Width);
