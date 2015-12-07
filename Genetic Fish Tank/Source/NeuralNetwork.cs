@@ -14,21 +14,15 @@ namespace Genetic_Fish_Tank.Source
         {
             input = new Neuron[inputCount];
             for (int x = 0; x < input.Length; x++)
-            {
                 input[x] = new Neuron();
-            }
 
             hidden = new Neuron[hiddenCount];
             for (int x = 0; x < hidden.Length; x++)
-            {
                 hidden[x] = new Neuron();
-            }
 
             output = new Neuron[outputCount];
             for (int x = 0; x < output.Length; x++)
-            {
                 output[x] = new Neuron();
-            }
         }
 
         public void SendInput(int[] inputNew)
@@ -90,7 +84,6 @@ namespace Genetic_Fish_Tank.Source
 
     class Neuron
     {
-        public bool dominant = false;
         public int value = 0;
         public List<Neuron> connections = new List<Neuron>();
     }

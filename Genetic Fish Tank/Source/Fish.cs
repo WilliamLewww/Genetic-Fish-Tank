@@ -119,7 +119,11 @@ namespace Genetic_Fish_Tank.Source
         public Vector2 position;
         public Rectangle rectangle;
 
-        public int score = 0;
+        public double Score { get { return (foodEaten * 5) + timeAlive; } }
+        public int life = 30;
+        public int foodEaten = 0;
+        public double timeAlive = 0;
+        public double timer = 0;
 
         public CollisionCircle(int x, int y)
         {
@@ -135,14 +139,29 @@ namespace Genetic_Fish_Tank.Source
             position = new Vector2(x, y);
             rectangle = new Rectangle(x, y, texture.Width, texture.Height);
 
+            timer += gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (timer >= 1f)
+            {
+                life -= 1;
+                timer = 0f;
+            }
+
             foreach (Food food in Tank.foodList)
             {
                 if (PixelCollision(rectangle, textureData, food.FoodRectangle, Food.textureData))
                 {
-                    score += 1;
+                    foodEaten += 1;
                     food.eaten = true;
+
+                    life += 5;
                 }
             }
+
+            if (life > 30)
+                life = 30;
+
+            timeAlive += gameTime.ElapsedGameTime.TotalSeconds;
         }
 
         public void Draw(SpriteBatch spriteBatch)
