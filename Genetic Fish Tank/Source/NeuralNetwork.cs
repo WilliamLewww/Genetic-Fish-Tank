@@ -16,21 +16,18 @@ namespace Genetic_Fish_Tank.Source
             for (int x = 0; x < input.Length; x++)
             {
                 input[x] = new Neuron();
-                input[x].layer = 0;
             }
 
             hidden = new Neuron[hiddenCount];
             for (int x = 0; x < hidden.Length; x++)
             {
                 hidden[x] = new Neuron();
-                hidden[x].layer = 1;
             }
 
             output = new Neuron[outputCount];
             for (int x = 0; x < output.Length; x++)
             {
                 output[x] = new Neuron();
-                output[x].layer = 2;
             }
         }
 
@@ -51,7 +48,7 @@ namespace Genetic_Fish_Tank.Source
                     for (int y = 0; y < hidden.Length; y++)
                     {
                         if (randomInt == 1)
-                            input[x].connections.Add(y);
+                            input[x].connections.Add(hidden[y]);
 
                         randomInt = random.Next(2);
                     }
@@ -64,7 +61,7 @@ namespace Genetic_Fish_Tank.Source
                     for (int y = 0; y < output.Length; y++)
                     {
                         if (randomInt == 1)
-                            hidden[x].connections.Add(y);
+                            hidden[x].connections.Add(output[y]);
 
                         randomInt = random.Next(2);
                     }
@@ -72,18 +69,22 @@ namespace Genetic_Fish_Tank.Source
                     if (hidden[x].connections.Count == 0) x -= 1;
                 }
             }
-
             established = true;
+
+            foreach (Neuron neuron in input)
+                if (neuron.value == 1)
+                    foreach (Neuron neuronB in neuron.connections)
+                        neuronB.value = 1;
+
+            foreach (Neuron neuron in hidden)
+                if (neuron.value == 1)
+                    foreach (Neuron neuronB in neuron.connections)
+                        neuronB.value = 1;
         }
 
-        public int[] GetOutput()
+        public Neuron[] GetOutput()
         {
-            int[] outputValue = new int[output.Length];
-
-            for (int x = 0; x < output.Length; x++)
-                outputValue[x] = output[x].value;
-
-            return outputValue;
+            return output;
         }
     }
 
@@ -91,7 +92,6 @@ namespace Genetic_Fish_Tank.Source
     {
         public bool dominant = false;
         public int value = 0;
-        public int layer = -1;
-        public List<int> connections = new List<int>();
+        public List<Neuron> connections = new List<Neuron>();
     }
 }

@@ -92,8 +92,10 @@ namespace Genetic_Fish_Tank.Source
 
             brain.SendInput(input);
             brain.EstablishRandomNetwork();
-            if (brain.GetOutput()[0] == 1) rotation -= 1;
-            if (brain.GetOutput()[1] == 1) rotation += 1;
+
+            if (brain.GetOutput()[0].value == 1) rotation -= 1;
+            if (brain.GetOutput()[1].value == 1) rotation += 1;
+            if (brain.GetOutput()[2].value == 1) Swim(.5f);
 
             rectangle = new Rectangle((int)(position.X), (int)(position.Y), texture.Width, texture.Height);
         }
