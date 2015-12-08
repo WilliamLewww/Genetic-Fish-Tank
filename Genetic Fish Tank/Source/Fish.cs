@@ -124,6 +124,7 @@ namespace Genetic_Fish_Tank.Source
         public int foodEaten = 0;
         public double timeAlive = 0;
         public double timer = 0;
+        public bool dead = false;
 
         public CollisionCircle(int x, int y)
         {
@@ -160,6 +161,9 @@ namespace Genetic_Fish_Tank.Source
 
             if (life > 30)
                 life = 30;
+
+            if (life <= 0)
+                dead = true;
 
             timeAlive += gameTime.ElapsedGameTime.TotalSeconds;
         }
