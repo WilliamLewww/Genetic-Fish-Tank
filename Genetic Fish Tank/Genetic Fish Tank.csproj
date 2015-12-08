@@ -75,7 +75,6 @@
     <Content Include="Content\Sprites\proximitysensor.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="font.png" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
