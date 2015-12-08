@@ -6,9 +6,7 @@ namespace Genetic_Fish_Tank.Source
     class NeuralNetwork
     {
         static Random random = new Random();
-        Neuron[] input, hidden, output;
-
-        bool established = false;
+        public Neuron[] input, hidden, output;
 
         public NeuralNetwork(int inputCount, int hiddenCount, int outputCount)
         {
@@ -31,40 +29,46 @@ namespace Genetic_Fish_Tank.Source
                 input[x].value = inputNew[x];
         }
 
+        public void EstablishExistingNetwork(Neuron[] inputArgs, Neuron[] hiddenArgs, Neuron[] outputArgs)
+        {
+            input = inputArgs;
+            hidden = hiddenArgs;
+            output = outputArgs;
+        }
+
         public void EstablishRandomNetwork()
         {
-            if (established == false)
+            int randomInt = random.Next(2);
+
+            for (int x = 0; x < input.Length; x++)
             {
-                int randomInt = random.Next(2);
-
-                for (int x = 0; x < input.Length; x++)
+                for (int y = 0; y < hidden.Length; y++)
                 {
-                    for (int y = 0; y < hidden.Length; y++)
-                    {
-                        if (randomInt == 1)
-                            input[x].connections.Add(hidden[y]);
+                    if (randomInt == 1)
+                        input[x].connections.Add(hidden[y]);
 
-                        randomInt = random.Next(2);
-                    }
-
-                    if (input[x].connections.Count == 0) x -= 1;
+                    randomInt = random.Next(2);
                 }
 
-                for (int x = 0; x < hidden.Length; x++)
-                {
-                    for (int y = 0; y < output.Length; y++)
-                    {
-                        if (randomInt == 1)
-                            hidden[x].connections.Add(output[y]);
-
-                        randomInt = random.Next(2);
-                    }
-
-                    if (hidden[x].connections.Count == 0) x -= 1;
-                }
+                if (input[x].connections.Count == 0) x -= 1;
             }
-            established = true;
 
+            for (int x = 0; x < hidden.Length; x++)
+            {
+                for (int y = 0; y < output.Length; y++)
+                {
+                    if (randomInt == 1)
+                        hidden[x].connections.Add(output[y]);
+
+                    randomInt = random.Next(2);
+                }
+
+                if (hidden[x].connections.Count == 0) x -= 1;
+            }
+        }
+
+        public void UpdateNetwork()
+        {
             foreach (Neuron neuron in input)
                 if (neuron.value == 1)
                     foreach (Neuron neuronB in neuron.connections)

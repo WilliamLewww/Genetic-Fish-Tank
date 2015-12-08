@@ -8,7 +8,7 @@ namespace Genetic_Fish_Tank.Source
 {
     class Fish
     {
-        NeuralNetwork brain;
+        public NeuralNetwork brain;
 
         public CollisionCircle collisionCircle;
 
@@ -52,10 +52,21 @@ namespace Genetic_Fish_Tank.Source
             position += direction * speed;
         }
 
+        public void ResetFish(int hidden)
+        {
+            brain = new NeuralNetwork(2, hidden, 3);
+
+            position = new Vector2(random.Next((Game1.screenWidth - Game1.theoreticalScreenWidth) / 2, ((Game1.screenWidth - Game1.theoreticalScreenWidth) / 2) + Game1.theoreticalScreenWidth - texture.Width), random.Next((Game1.screenHeight - Game1.theoreticalScreenHeight) / 2, ((Game1.screenHeight - Game1.theoreticalScreenHeight) / 2) + Game1.theoreticalScreenHeight - texture.Height));
+            rectangle = new Rectangle((int)(position.X), (int)(position.Y), texture.Width, texture.Height);
+
+            rotation = 90;
+        }
+
         public Fish()
         {
             texture = content.Load<Texture2D>("Sprites/fish.png");
             brain = new NeuralNetwork(2, 1, 3);
+            brain.EstablishRandomNetwork();
 
             position = new Vector2(random.Next((Game1.screenWidth - Game1.theoreticalScreenWidth) / 2, ((Game1.screenWidth - Game1.theoreticalScreenWidth) / 2) + Game1.theoreticalScreenWidth - texture.Width), random.Next((Game1.screenHeight - Game1.theoreticalScreenHeight) / 2, ((Game1.screenHeight - Game1.theoreticalScreenHeight) / 2) + Game1.theoreticalScreenHeight - texture.Height));
             rectangle = new Rectangle((int)(position.X), (int)(position.Y), texture.Width, texture.Height);
@@ -91,7 +102,7 @@ namespace Genetic_Fish_Tank.Source
             else input[0] = 1;
 
             brain.SendInput(input);
-            brain.EstablishRandomNetwork();
+            brain.UpdateNetwork();
 
             if (brain.GetOutput()[0].value == 1) rotation -= 1;
             if (brain.GetOutput()[1].value == 1) rotation += 1;
