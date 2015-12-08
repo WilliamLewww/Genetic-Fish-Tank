@@ -80,6 +80,11 @@ namespace Genetic_Fish_Tank.Source
                         neuronB.value = 1;
         }
 
+        public Neuron[] GetHidden()
+        {
+            return hidden;
+        }
+
         public Neuron[] GetOutput()
         {
             return output;
