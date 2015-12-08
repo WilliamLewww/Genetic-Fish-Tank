@@ -22,6 +22,8 @@ namespace Genetic_Fish_Tank.Source
 
         Food closest, closestLeft, closestRight;
 
+        public int fishIndex;
+
         static Random random = new Random();
 
         private static ContentManager content;
@@ -130,10 +132,9 @@ namespace Genetic_Fish_Tank.Source
         public Vector2 position;
         public Rectangle rectangle;
 
-        public double Score { get { return (foodEaten * 5) + timeAlive; } }
+        public int Score { get { return foodEaten; } }
         public int life = 30;
         public int foodEaten = 0;
-        public double timeAlive = 0;
         public double timer = 0;
         public bool dead = false;
 
@@ -175,8 +176,6 @@ namespace Genetic_Fish_Tank.Source
 
             if (life <= 0)
                 dead = true;
-
-            timeAlive += gameTime.ElapsedGameTime.TotalSeconds;
         }
 
         public void Draw(SpriteBatch spriteBatch)
