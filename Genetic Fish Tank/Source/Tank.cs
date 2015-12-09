@@ -59,7 +59,7 @@ namespace Genetic_Fish_Tank.Source
                 rankingString += fish.fishIndex + ":" + fish.collisionCircle.Score + ",,";
             characterList[characterList.Count - 1].Update(rankingString);
 
-            characterList[characterList.Count - 2].Update(geneticAlgorithm.generation.ToString() + "," + ((int)geneticAlgorithm.generationTimer).ToString());
+            characterList[characterList.Count - 2].Update(geneticAlgorithm.generation.ToString() + ":" + ((int)geneticAlgorithm.generationTimer).ToString());
         }
 
         public void Draw(SpriteBatch spriteBatch)
