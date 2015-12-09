@@ -36,9 +36,7 @@ namespace Genetic_Fish_Tank.Source
                 foreach (Neuron neuron in fishList[x].brain.input)
                 {
                     if (randomInt < percent)
-                    {
                         input.Add(neuralNetworkBackground.OffsetNeuron(neuron, fishList[x].brain.hidden));
-                    }
                     else
                         input.Add(neuron);
 
@@ -48,9 +46,7 @@ namespace Genetic_Fish_Tank.Source
                 foreach (Neuron neuron in fishList[x].brain.hidden)
                 {
                     if (randomInt < percent)
-                    {
                         hidden.Add(neuralNetworkBackground.OffsetNeuron(neuron, fishList[x].brain.output));
-                    }
                     else
                         hidden.Add(neuron);
 
