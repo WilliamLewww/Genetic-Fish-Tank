@@ -76,7 +76,7 @@ namespace FontSeparation
 
         public Character(string image, string text, Vector2 positionParameter)
         {
-            texture = content.Load<Texture2D>("Sprites/font.png");
+            texture = content.Load<Texture2D>("Sprites/" + image);
 
             fontSeparation = new FontSeparation();
             fontSeparation.LoadBitmap(new Bitmap(image));
@@ -130,30 +130,32 @@ namespace FontSeparation
         {
             switch (c)
             {
-                case '.':
+                case ',':
                     return 0;
-                case '0':
+                case '.':
                     return 1;
-                case '1':
+                case '0':
                     return 2;
-                case '2':
+                case '1':
                     return 3;
-                case '3':
+                case '2':
                     return 4;
-                case '4':
+                case '3':
                     return 5;
-                case '5':
+                case '4':
                     return 6;
-                case '6':
+                case '5':
                     return 7;
-                case '7':
+                case '6':
                     return 8;
-                case '8':
+                case '7':
                     return 9;
-                case '9':
+                case '8':
                     return 10;
-                case ':':
+                case '9':
                     return 11;
+                case ':':
+                    return 12;
             }
 
             return -1;

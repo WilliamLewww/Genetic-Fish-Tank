@@ -1,8 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System;
 using System.Collections.Generic;
 
 namespace Genetic_Fish_Tank.Source
@@ -26,11 +24,11 @@ namespace Genetic_Fish_Tank.Source
                 fishList[x] = new Fish();
                 fishList[x].fishIndex = x;
 
-                if (x < 10)
-                    characterList.Add(new FontSeparation.Character("font.png", x.ToString() + ":" + fishList[x].collisionCircle.life, new Vector2(12, x * 25)));
-                else
-                    characterList.Add(new FontSeparation.Character("font.png", x.ToString() + ":" + fishList[x].collisionCircle.life, new Vector2(0, x * 25)));
+                characterList.Add(new FontSeparation.Character("font.png", x.ToString() + ":" + fishList[x].collisionCircle.life, new Vector2(0, x * 25)));
             }
+
+            characterList.Add(new FontSeparation.Character("font.png", "", new Vector2(10, Game1.screenHeight - 64)));
+            characterList.Add(new FontSeparation.Character("font.png", "", new Vector2(10, Game1.screenHeight - 32)));
 
             Food.Content = content;
             for (int x = 0; x < 40; x++)
@@ -55,12 +53,13 @@ namespace Genetic_Fish_Tank.Source
                 foodList.Remove(food);
             tempFoodList.Clear();
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Space))
-            {
-                for (int x = 0; x < geneticAlgorithm.RankFittest(fishList).Length; x++)
-                    Console.Write(geneticAlgorithm.RankFittest(fishList)[x].fishIndex + ", ");
-                Console.WriteLine("");
-            }
+            string rankingString = "";
+
+            foreach (Fish fish in geneticAlgorithm.RankFittest(fishList))
+                rankingString += fish.fishIndex + ":" + fish.collisionCircle.Score + ",,";
+            characterList[characterList.Count - 1].Update(rankingString);
+
+            characterList[characterList.Count - 2].Update(geneticAlgorithm.generation.ToString() + "," + ((int)geneticAlgorithm.generationTimer).ToString());
         }
 
         public void Draw(SpriteBatch spriteBatch)

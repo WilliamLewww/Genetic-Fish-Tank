@@ -2,6 +2,7 @@
 {
     class GeneticAlgorithm
     {
+        public int generation = 0;
         public double generationTimer = 0;
 
         public Fish[] RankFittest(Fish[] fishList)
