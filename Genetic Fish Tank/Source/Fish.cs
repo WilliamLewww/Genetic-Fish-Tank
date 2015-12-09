@@ -9,7 +9,6 @@ namespace Genetic_Fish_Tank.Source
     class Fish
     {
         public NeuralNetwork brain;
-
         public CollisionCircle collisionCircle;
 
         ProximitySensor[] proximitySensor = new ProximitySensor[3];

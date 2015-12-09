@@ -8,7 +8,6 @@
         public Fish[] RankFittest(Fish[] fishList)
         {
             Fish[] newFishList = fishList;
-
             Fish temp;
 
             for (int x = 0; x < fishList.Length; x++)
