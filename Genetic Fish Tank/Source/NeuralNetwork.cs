@@ -29,6 +29,24 @@ namespace Genetic_Fish_Tank.Source
                 input[x].value = inputNew[x];
         }
 
+        public Neuron OffsetNeuron(Neuron neuron, Neuron[] neuronList)
+        {
+            Neuron newNeuron = new Neuron();
+            int randomInt = random.Next(2);
+
+            for (int x = 0; x < neuronList.Length; x++)
+            {
+                if (randomInt == 1)
+                    newNeuron.connections.Add(neuronList[x]);
+
+                randomInt = random.Next(2);
+
+                if (newNeuron.connections.Count == 0) x -= 1;
+            }
+
+            return newNeuron;
+        }
+
         public void EstablishExistingNetwork(Neuron[] inputArgs, Neuron[] hiddenArgs, Neuron[] outputArgs)
         {
             input = inputArgs;
