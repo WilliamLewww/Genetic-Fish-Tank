@@ -26,7 +26,7 @@ namespace Genetic_Fish_Tank.Source
             return true;
         }
 
-        public NeuralNetwork[] Offset(Fish[] fishList, int percent)
+        public NeuralNetwork[] Mutate(Fish[] fishList, int percent)
         {
             NeuralNetwork neuralNetworkBackground = new NeuralNetwork(0, 0, 0);
             List<NeuralNetwork> neuralNetwork = new List<NeuralNetwork>();
@@ -40,7 +40,7 @@ namespace Genetic_Fish_Tank.Source
                 foreach (Neuron neuron in fishList[x].brain.input)
                 {
                     if (randomInt < percent)
-                        input.Add(neuralNetworkBackground.OffsetNeuron(neuron, fishList[x].brain.hidden));
+                        input.Add(neuralNetworkBackground.MutateNeuron(neuron, fishList[x].brain.hidden));
                     else
                         input.Add(neuron);
 
@@ -50,7 +50,7 @@ namespace Genetic_Fish_Tank.Source
                 foreach (Neuron neuron in fishList[x].brain.hidden)
                 {
                     if (randomInt < percent)
-                        hidden.Add(neuralNetworkBackground.OffsetNeuron(neuron, fishList[x].brain.output));
+                        hidden.Add(neuralNetworkBackground.MutateNeuron(neuron, fishList[x].brain.output));
                     else
                         hidden.Add(neuron);
 

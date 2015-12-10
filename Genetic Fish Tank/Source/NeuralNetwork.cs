@@ -29,7 +29,7 @@ namespace Genetic_Fish_Tank.Source
                 input[x].value = inputNew[x];
         }
 
-        public Neuron OffsetNeuron(Neuron neuron, Neuron[] neuronList)
+        public Neuron MutateNeuron(Neuron neuron, Neuron[] neuronList)
         {
             Neuron newNeuron = new Neuron();
             int randomInt = random.Next(2);
