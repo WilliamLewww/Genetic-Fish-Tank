@@ -8,6 +8,8 @@ namespace Genetic_Fish_Tank.Source
     class Tank
     {
         GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
+        NeuralNetwork[] tempNeuralNetwork;
+
         List<FontSeparation.Character> characterList = new List<FontSeparation.Character>();
 
         public static Fish[] fishList = new Fish[20];
@@ -39,9 +41,23 @@ namespace Genetic_Fish_Tank.Source
         {
             geneticAlgorithm.generationTimer += gameTime.ElapsedGameTime.TotalSeconds;
 
+            if (geneticAlgorithm.GetGenerationState(fishList))
+            {
+                tempNeuralNetwork = geneticAlgorithm.CrossMutate(geneticAlgorithm.ExterminatePopulation(fishList, 50), 20);
+
+                for (int x = 0; x < tempNeuralNetwork.Length; x++)
+                {
+                    fishList[x].ResetFish(tempNeuralNetwork[x].hidden.Length, tempNeuralNetwork[x]);
+                }
+
+                geneticAlgorithm.generation += 1;
+            }
+
             for (int x = 0; x < fishList.Length; x++)
             {
-                fishList[x].Update(gameTime);
+                if (fishList[x].collisionCircle.dead == false)
+                    fishList[x].Update(gameTime);
+
                 characterList[x].Update(x.ToString() + ":" + fishList[x].collisionCircle.life);
             }
 
@@ -59,7 +75,7 @@ namespace Genetic_Fish_Tank.Source
                 rankingString += fish.fishIndex + ":" + fish.collisionCircle.Score + ",,";
             characterList[characterList.Count - 1].Update(rankingString);
 
-            characterList[characterList.Count - 2].Update(geneticAlgorithm.generation.ToString() + ":" + ((int)geneticAlgorithm.generationTimer).ToString());
+            characterList[characterList.Count - 2].Update(geneticAlgorithm.generation.ToString() + ":" + (30 - (int)geneticAlgorithm.generationTimer).ToString());
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -68,7 +84,8 @@ namespace Genetic_Fish_Tank.Source
                 food.Draw(spriteBatch);
 
             foreach (Fish fish in fishList)
-                fish.Draw(spriteBatch);
+                if (fish.collisionCircle.dead == false)
+                    fish.Draw(spriteBatch);
 
             foreach (FontSeparation.Character character in characterList)
                 character.Draw(spriteBatch);

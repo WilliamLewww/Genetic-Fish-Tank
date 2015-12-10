@@ -12,13 +12,17 @@ namespace Genetic_Fish_Tank.Source
 
         public bool GetGenerationState(Fish[] fishList)
         {
-            if (generationTimer > 120f)
+            if (generationTimer > 30f)
+            {
+                generationTimer = 0f;
                 return true;
+            }
 
             foreach (Fish fish in fishList)
                 if (fish.collisionCircle.dead == false)
                     return false;
 
+            generationTimer = 0f;
             return true;
         }
 
