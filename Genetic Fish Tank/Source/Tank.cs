@@ -7,12 +7,14 @@ namespace Genetic_Fish_Tank.Source
 {
     class Tank
     {
+        const int FOODCOUNT = 40, FISHCOUNT = 20;
+
         GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
         NeuralNetwork[] tempNeuralNetwork;
 
         List<FontSeparation.Character> characterList = new List<FontSeparation.Character>();
 
-        public static Fish[] fishList = new Fish[20];
+        public static Fish[] fishList = new Fish[FISHCOUNT];
         public static List<Food> foodList = new List<Food>();
         static List<Food> tempFoodList = new List<Food>();
 
@@ -33,7 +35,7 @@ namespace Genetic_Fish_Tank.Source
             characterList.Add(new FontSeparation.Character("font.png", "", new Vector2(10, Game1.screenHeight - 32)));
 
             Food.Content = content;
-            for (int x = 0; x < 40; x++)
+            for (int x = 0; x < FOODCOUNT; x++)
                 foodList.Add(new Food());
         }
 
@@ -43,12 +45,15 @@ namespace Genetic_Fish_Tank.Source
 
             if (geneticAlgorithm.GetGenerationState(fishList))
             {
-                tempNeuralNetwork = geneticAlgorithm.CrossMutate(geneticAlgorithm.ExterminatePopulation(fishList, 50), 20);
+                tempNeuralNetwork = geneticAlgorithm.CrossMutate(geneticAlgorithm.ExterminatePopulation(fishList, 90), FISHCOUNT);
 
                 for (int x = 0; x < tempNeuralNetwork.Length; x++)
                 {
                     fishList[x].ResetFish(tempNeuralNetwork[x].hidden.Length, tempNeuralNetwork[x]);
                 }
+
+                for (int x = 0; x < FOODCOUNT; x++)
+                    foodList.Add(new Food());
 
                 geneticAlgorithm.generation += 1;
             }

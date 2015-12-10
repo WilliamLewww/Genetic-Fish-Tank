@@ -101,6 +101,9 @@ namespace Genetic_Fish_Tank.Source
             List<Fish> newFishList = new List<Fish>();
             foreach (Fish fish in fishList)
                 newFishList.Add(fish);
+            List<Fish> tempNewFishList = new List<Fish>();
+            foreach (Fish fish in fishList)
+                tempNewFishList.Add(fish);
 
             int amountRemoved = 0;
             int randomInt = random.Next(101);
@@ -110,7 +113,7 @@ namespace Genetic_Fish_Tank.Source
                 for (int x = 0; x < fishList.Length; x++)
                 {
                     if ((x / fishList.Length) * 100 >= randomInt)
-                        newFishList.Remove(newFishList[x]);
+                        tempNewFishList.Remove(newFishList[x]);
 
                     amountRemoved += 1;
 
@@ -120,7 +123,7 @@ namespace Genetic_Fish_Tank.Source
                 }
             }
 
-            return newFishList.ToArray();
+            return tempNewFishList.ToArray();
         }
 
         public Fish[] RankFittest(Fish[] fishList)
