@@ -39,9 +39,11 @@ namespace Genetic_Fish_Tank.Source
                 input[x].value = inputNew[x];
         }
 
-        public Neuron MutateNeuron(Neuron neuron, Neuron[] neuronList, int index, int layer)
+        public Neuron MutateNeuron(Neuron neuron, Neuron[] neuronList)
         {
-            Neuron newNeuron = new Neuron(index, layer);
+            Neuron newNeuron = neuron;
+            newNeuron.connections.Clear();
+
             int randomInt = random.Next(2);
 
             while (newNeuron.connections.Count == 0)
@@ -49,10 +51,7 @@ namespace Genetic_Fish_Tank.Source
                 for (int x = 0; x < neuronList.Length; x++)
                 {
                     if (randomInt == 1)
-                    {
                         newNeuron.connections.Add(neuronList[x]);
-                        neuronList[x].parentConnectors += 1;
-                    }
 
                     randomInt = random.Next(2);
                 }
@@ -77,10 +76,7 @@ namespace Genetic_Fish_Tank.Source
                 for (int y = 0; y < hidden.Length; y++)
                 {
                     if (randomInt == 1)
-                    {
                         input[x].connections.Add(hidden[y]);
-                        hidden[y].parentConnectors += 1;
-                    }
 
                     randomInt = random.Next(2);
                 }
@@ -93,10 +89,7 @@ namespace Genetic_Fish_Tank.Source
                 for (int y = 0; y < output.Length; y++)
                 {
                     if (randomInt == 1)
-                    {
                         hidden[x].connections.Add(output[y]);
-                        output[y].parentConnectors += 1;
-                    }
 
                     randomInt = random.Next(2);
                 }
@@ -141,7 +134,6 @@ namespace Genetic_Fish_Tank.Source
         }
 
         public int value = 0;
-        public int parentConnectors = 0;
         public List<Neuron> connections = new List<Neuron>();
     }
 }

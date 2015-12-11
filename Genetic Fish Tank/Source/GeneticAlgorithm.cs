@@ -26,89 +26,52 @@ namespace Genetic_Fish_Tank.Source
             return true;
         }
 
-        public NeuralNetwork[] Mutate(NeuralNetwork[] neuralNetworkArgs, int percentAmountMutate, int percentMutate, int percentHidden)
+        public NeuralNetwork[] Mutate(NeuralNetwork[] neuralNetworkArgs, int percentAmountMutate, int percentMutate)
         {
-            NeuralNetwork neuralNetworkBackground = new NeuralNetwork(0, 0, 0);
             List<NeuralNetwork> neuralNetwork = new List<NeuralNetwork>();
-
+            NeuralNetwork neuralNetworkMethods = new NeuralNetwork(0, 0, 0);
             int randomInt = random.Next(101);
-            int counter = 0;
 
             for (int x = 0; x < neuralNetworkArgs.Length; x++)
             {
-                List<Neuron> input = new List<Neuron>(), hidden = new List<Neuron>();
-
                 if (randomInt < percentAmountMutate)
                 {
-                    foreach (Neuron neuron in neuralNetworkArgs[x].hidden)
-                    {
-                        if (randomInt < percentHidden)
-                        {
-                            hidden.Add(neuralNetworkBackground.MutateNeuron(neuron, neuralNetworkArgs[x].output, counter, 1));
-                            counter += 1;
-                        }
+                    List<Neuron> input = new List<Neuron>(), hidden = new List<Neuron>(), output = new List<Neuron>();
 
-                        if (randomInt < percentMutate)
-                            hidden.Add(neuralNetworkBackground.MutateNeuron(neuron, neuralNetworkArgs[x].output, counter, 1));
-                        else
-                            hidden.Add(neuron);
+                    randomInt = random.Next(101);
 
-                        randomInt = random.Next(101);
-
-                        counter += 1;
-                    }
-
-                    counter = 0;
-
-                    foreach (Neuron neuron in neuralNetworkArgs[x].input)
+                    for (int y = 0; y < neuralNetworkArgs[x].input.Length; y++)
                     {
                         if (randomInt < percentMutate)
-                            input.Add(neuralNetworkBackground.MutateNeuron(neuron, neuralNetworkArgs[x].hidden, counter, 0));
+                            input.Add(neuralNetworkMethods.MutateNeuron(neuralNetworkArgs[x].input[y], neuralNetworkArgs[x].hidden));
                         else
-                            input.Add(neuron);
+                            input.Add(neuralNetworkArgs[x].input[y]);
 
                         randomInt = random.Next(101);
-
-                        counter += 1;
                     }
 
-                    //FIX THIS RIGHT NOW!!!!!//FIX THIS RIGHT NOW!!!!!//FIX THIS RIGHT NOW!!!!!//FIX THIS RIGHT NOW!!!!!//FIX THIS RIGHT NOW!!!!!
-                    //FIX THIS RIGHT NOW!!!!!//FIX THIS RIGHT NOW!!!!!//FIX THIS RIGHT NOW!!!!!//FIX THIS RIGHT NOW!!!!!//FIX THIS RIGHT NOW!!!!!
-                    //FIX THIS RIGHT NOW!!!!!//FIX THIS RIGHT NOW!!!!!//FIX THIS RIGHT NOW!!!!!//FIX THIS RIGHT NOW!!!!!//FIX THIS RIGHT NOW!!!!!
-                    for (int y = 0; y < hidden.Count; y++)
+                    for (int y = 0; y < neuralNetworkArgs[x].hidden.Length; y++)
                     {
-                        if (hidden[y].parentConnectors == 0)
-                        {
-                            for (int z = 0; z < input.Count; z++)
-                            {
-                                randomInt = random.Next(2);
+                        if (randomInt < percentMutate)
+                            hidden.Add(neuralNetworkMethods.MutateNeuron(neuralNetworkArgs[x].hidden[y], neuralNetworkArgs[x].output));
+                        else
+                            hidden.Add(neuralNetworkArgs[x].hidden[y]);
 
-                                if (randomInt == 1)
-                                {
-                                    if (!input[z].connections.Contains(hidden[y]))
-                                    {
-                                        input[z].connections.Add(hidden[y]);
-                                        hidden[y].parentConnectors += 1;
-                                    }
-                                }
-                            }
-
-                            if (hidden[y].parentConnectors == 0) y -= 1;
-                        }
+                        randomInt = random.Next(101);
                     }
+
+                    foreach (Neuron neuron in neuralNetworkArgs[x].output)
+                        output.Add(neuron);
+
+                    neuralNetwork.Add(new NeuralNetwork(input.Count, hidden.Count, output.Count));
+                    neuralNetwork[x].EstablishExistingNetwork(input.ToArray(), hidden.ToArray(), output.ToArray());
                 }
                 else
                 {
-                    foreach (Neuron neuron in neuralNetworkArgs[x].input)
-                        input.Add(neuron);
-                    foreach (Neuron neuron in neuralNetworkArgs[x].hidden)
-                        hidden.Add(neuron);
+                    neuralNetwork.Add(neuralNetworkArgs[x]);
                 }
 
                 randomInt = random.Next(101);
-
-                neuralNetwork.Add(new NeuralNetwork(input.Count, hidden.Count, neuralNetworkArgs[x].output.Length));
-                neuralNetwork[x].EstablishExistingNetwork(input.ToArray(), hidden.ToArray(), neuralNetworkArgs[x].output);
             }
 
             return neuralNetwork.ToArray();
