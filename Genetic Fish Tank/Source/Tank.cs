@@ -10,7 +10,9 @@ namespace Genetic_Fish_Tank.Source
         static int FOODCOUNT = 40, FISHCOUNT = 20, EXTERMINATIONPERCENT = 50, MUTATIONPERCENT = 100, NEURONMUTATIONPERCENT = 50, NEGATIVEHIDDENPERCENT = 50;
 
         static GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
-        NeuralNetwork[] tempNeuralNetwork;
+
+        NeuralNetwork[] tempNeuralNetwork = new NeuralNetwork[FISHCOUNT];
+        Fish[] tempFishList = new Fish[FISHCOUNT];
 
         List<FontSeparation.Character> characterList = new List<FontSeparation.Character>();
 
@@ -45,9 +47,15 @@ namespace Genetic_Fish_Tank.Source
 
             if (geneticAlgorithm.GetGenerationState(fishList))
             {
-                tempNeuralNetwork = geneticAlgorithm.CrossMutate(geneticAlgorithm.ExterminatePopulation(fishList, EXTERMINATIONPERCENT), FISHCOUNT);
+                tempFishList = geneticAlgorithm.ExterminatePopulation(fishList, EXTERMINATIONPERCENT);
+                for (int x = 0; x < tempNeuralNetwork.Length; x++)
+                {
+                    tempNeuralNetwork[x] = tempFishList[x].brain;
+                }
+
+                tempNeuralNetwork = geneticAlgorithm.CrossMutate(tempNeuralNetwork, FISHCOUNT);
                 tempNeuralNetwork = geneticAlgorithm.Mutate(tempNeuralNetwork, MUTATIONPERCENT, NEURONMUTATIONPERCENT);
-                tempNeuralNetwork = geneticAlgorithm.AddHidden(tempNeuralNetwork, 50);
+                tempNeuralNetwork = geneticAlgorithm.AddHidden(tempNeuralNetwork, NEGATIVEHIDDENPERCENT);
 
                 for (int x = 0; x < tempNeuralNetwork.Length; x++)
                 {

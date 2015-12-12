@@ -39,6 +39,17 @@ namespace Genetic_Fish_Tank.Source
                 input[x].value = inputNew[x];
         }
 
+        public Neuron CloneConnections(Neuron neuronArgs, Neuron[] neuronListArgs, bool negative)
+        {
+            Neuron newNeuron = new Neuron(neuronArgs.index, neuronArgs.layer);
+            newNeuron.negative = negative;
+
+            foreach (Neuron neuron in neuronArgs.connections)
+                newNeuron.connections.Add(neuronListArgs[neuron.index]);
+
+            return newNeuron;
+        }
+
         public Neuron[] ConnectInput(Neuron[] neuronListArgs, Neuron neuron)
         {
             Neuron[] neuronList = neuronListArgs;

@@ -118,36 +118,62 @@ namespace Genetic_Fish_Tank.Source
             return neuralNetwork.ToArray();
         }
 
-        public NeuralNetwork[] CrossMutate(Fish[] fishList, int total)
+        public NeuralNetwork[] CrossMutate(NeuralNetwork[] neuralNetworkArgs, int total)
         {
             List<NeuralNetwork> neuralNetwork = new List<NeuralNetwork>();
-            int randomInt = random.Next(fishList.Length);
+            NeuralNetwork neuralNetworkMethods = new NeuralNetwork(0, 0, 0);
+            int randomInt = random.Next(neuralNetworkArgs.Length);
 
             for (int x = 0; x < total; x++)
             {
                 List<Neuron> input = new List<Neuron>(), hidden = new List<Neuron>(), output = new List<Neuron>();
+                List<int> additionalConnections = new List<int>();
 
-                for (int y = 0; y < fishList[0].brain.input.Length; y++)
+                for (int y = 0; y < neuralNetworkArgs[0].output.Length; y++)
                 {
-                    input.Add(fishList[randomInt].brain.input[y]);
-                    randomInt = random.Next(fishList.Length);
+                    output.Add(neuralNetworkArgs[randomInt].output[y]);
+                    randomInt = random.Next(neuralNetworkArgs.Length);
                 }
-                for (int y = 0; y < fishList[0].brain.hidden.Length; y++)
+
+                for (int y = 0; y < neuralNetworkArgs[0].hidden.Length; y++)
                 {
-                    if (fishList[randomInt].brain.hidden.Length < fishList[0].brain.hidden.Length && y > fishList[randomInt].brain.hidden.Length - 1)
-                        hidden.Add(fishList[0].brain.hidden[y]);
+                    if (neuralNetworkArgs[0].hidden.Length > neuralNetworkArgs[randomInt].hidden.Length && y > neuralNetworkArgs[randomInt].hidden.Length - 1)
+                    {
+                        hidden.Add(neuralNetworkMethods.CloneConnections(neuralNetworkArgs[0].hidden[y], output.ToArray(), neuralNetworkArgs[0].hidden[y].negative));
+                        additionalConnections.Add(randomInt);
+                    }
                     else
-                        hidden.Add(fishList[randomInt].brain.hidden[y]);
+                        hidden.Add(neuralNetworkMethods.CloneConnections(neuralNetworkArgs[randomInt].hidden[y], output.ToArray(), neuralNetworkArgs[randomInt].hidden[y].negative));
 
-                    randomInt = random.Next(fishList.Length);
+                    randomInt = random.Next(neuralNetworkArgs.Length);
                 }
-                for (int y = 0; y < fishList[0].brain.output.Length; y++)
+
+                for (int y = 0; y < neuralNetworkArgs[0].input.Length; y++)
                 {
-                    output.Add(fishList[randomInt].brain.output[y]);
-                    randomInt = random.Next(fishList.Length);
+                    bool passable = false;
+
+                    if (additionalConnections.Count > 0)
+                    {
+                        while (passable == false)
+                        {
+                            foreach (int z in additionalConnections)
+                            {
+                                if (randomInt != z)
+                                    passable = true;
+                            }
+
+                            randomInt = random.Next(neuralNetworkArgs.Length);
+                        }
+
+                        input.Add(neuralNetworkMethods.CloneConnections(neuralNetworkArgs[randomInt].input[y], hidden.ToArray(), neuralNetworkArgs[randomInt].input[y].negative));
+                    }
+                    else
+                        input.Add(neuralNetworkMethods.CloneConnections(neuralNetworkArgs[randomInt].input[y], hidden.ToArray(), neuralNetworkArgs[randomInt].input[y].negative));
+
+                    randomInt = random.Next(neuralNetworkArgs.Length);
                 }
 
-                neuralNetwork.Add(new NeuralNetwork(fishList[0].brain.input.Length, fishList[0].brain.hidden.Length, fishList[0].brain.output.Length));
+                neuralNetwork.Add(new NeuralNetwork(input.Count, hidden.Count, output.Count));
                 neuralNetwork[x].EstablishExistingNetwork(input.ToArray(), hidden.ToArray(), output.ToArray());
             }
 
