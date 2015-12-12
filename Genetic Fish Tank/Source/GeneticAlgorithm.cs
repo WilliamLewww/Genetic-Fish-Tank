@@ -26,6 +26,47 @@ namespace Genetic_Fish_Tank.Source
             return true;
         }
 
+        public NeuralNetwork[] AddHidden(NeuralNetwork[] neuralNetworkArgs, int percentNegative)
+        {
+            List<NeuralNetwork> neuralNetwork = new List<NeuralNetwork>();
+            NeuralNetwork neuralNetworkMethods = new NeuralNetwork(0, 0, 0);
+            int randomInt = random.Next(101);
+
+            for (int x = 0; x < neuralNetworkArgs.Length; x++)
+            {
+                List<Neuron> input = new List<Neuron>(), hidden = new List<Neuron>(), output = new List<Neuron>();
+
+                foreach (Neuron neuronArgs in neuralNetworkArgs[x].input)
+                    input.Add(neuronArgs);
+
+                foreach (Neuron neuronArgs in neuralNetworkArgs[x].output)
+                    output.Add(neuronArgs);
+
+                for (int y = 0; y < neuralNetworkArgs[x].hidden.Length; y++)
+                {
+                    hidden.Add(neuralNetworkArgs[x].hidden[y]);
+
+                    if (y == neuralNetworkArgs[x].hidden.Length - 1)
+                    {
+                        if (randomInt < percentNegative)
+                            hidden.Add(neuralNetworkMethods.CreateHidden(neuralNetworkArgs[x].hidden.Length, true));
+                        else
+                            hidden.Add(neuralNetworkMethods.CreateHidden(neuralNetworkArgs[x].hidden.Length, false));
+
+                        neuralNetworkMethods.MutateNeuron(hidden[y + 1], output.ToArray());
+                        neuralNetworkMethods.ConnectInput(input.ToArray(), hidden[y + 1]);
+                    }
+                }
+
+                neuralNetwork.Add(new NeuralNetwork(input.Count, hidden.Count, output.Count));
+                neuralNetwork[x].EstablishExistingNetwork(input.ToArray(), hidden.ToArray(), output.ToArray());
+
+                randomInt = random.Next(101);
+            }
+
+            return neuralNetwork.ToArray();
+        }
+
         public NeuralNetwork[] Mutate(NeuralNetwork[] neuralNetworkArgs, int percentAmountMutate, int percentMutate)
         {
             List<NeuralNetwork> neuralNetwork = new List<NeuralNetwork>();

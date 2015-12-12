@@ -39,6 +39,37 @@ namespace Genetic_Fish_Tank.Source
                 input[x].value = inputNew[x];
         }
 
+        public Neuron[] ConnectInput(Neuron[] neuronListArgs, Neuron neuron)
+        {
+            Neuron[] neuronList = neuronListArgs;
+            int randomInt = random.Next(2);
+            int connections = 0;
+
+            while (connections == 0)
+            {
+                for (int x = 0; x < neuronListArgs.Length; x++)
+                {
+                    if (randomInt == 1)
+                    {
+                        neuronListArgs[x].connections.Add(neuron);
+                        connections += 1;
+                    }
+
+                    randomInt = random.Next(2);
+                }
+            }
+
+            return neuronList;
+        }
+
+        public Neuron CreateHidden(int index, bool negative)
+        {
+            Neuron newNeuron = new Neuron(index, 1);
+            newNeuron.negative = negative;
+
+            return newNeuron;
+        }
+
         public Neuron MutateNeuron(Neuron neuron, Neuron[] neuronList)
         {
             Neuron newNeuron = neuron;
@@ -106,9 +137,20 @@ namespace Genetic_Fish_Tank.Source
                         neuronB.value = 1;
 
             foreach (Neuron neuron in hidden)
-                if (neuron.value == 1)
-                    foreach (Neuron neuronB in neuron.connections)
-                        neuronB.value = 1;
+            {
+                if (neuron.negative == false)
+                {
+                    if (neuron.value == 1)
+                        foreach (Neuron neuronB in neuron.connections)
+                            neuronB.value = 1;
+                }
+                else
+                {
+                    if (neuron.value == 1)
+                        foreach (Neuron neuronB in neuron.connections)
+                            neuronB.value = 0;
+                }
+            }
         }
 
         public Neuron[] GetHidden()
@@ -124,8 +166,9 @@ namespace Genetic_Fish_Tank.Source
 
     class Neuron
     {
-        public int index;
-        public int layer;
+        public int index = -1;
+        public int layer = -1;
+        public bool negative = false;
 
         public Neuron(int indexArg, int layerArg)
         {
