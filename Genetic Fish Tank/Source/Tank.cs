@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 
 namespace Genetic_Fish_Tank.Source
@@ -48,7 +49,8 @@ namespace Genetic_Fish_Tank.Source
 
             if (geneticAlgorithm.GetGenerationState(fishList))
             {
-                geneticAlgorithm.fittest.Add(geneticAlgorithm.GetFittest(fishList));
+                geneticAlgorithm.fittest.Add(new Fish(geneticAlgorithm.GetFittest(fishList).brain, geneticAlgorithm.GetFittest(fishList).collisionCircle));
+                Console.WriteLine(geneticAlgorithm.CheckTrend(geneticAlgorithm.fittest.ToArray()));
 
                 tempFishList = geneticAlgorithm.ExterminatePopulation(fishList, EXTERMINATIONPERCENT);
                 for (int x = 0; x < tempNeuralNetwork.Length; x++)

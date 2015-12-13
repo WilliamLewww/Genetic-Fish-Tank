@@ -30,6 +30,50 @@ namespace Genetic_Fish_Tank.Source
 
         public Fish GetFittest(Fish[] fishList) { return RankFittest(fishList)[0]; }
 
+        public int CheckTrend(Fish[] fishList)
+        {
+            int cumulative = 0;
+            int counter = generation;
+            int greater = 0;
+
+            if (fishList.Length > 1)
+            {
+                if (fishList[generation].collisionCircle.Score > fishList[generation - 1].collisionCircle.Score)
+                    greater = 1;
+                if (fishList[generation].collisionCircle.Score < fishList[generation - 1].collisionCircle.Score)
+                    greater = -1;
+
+                while (counter > 1)
+                {
+                    if (greater == 1)
+                    {
+                        if (fishList[counter].collisionCircle.Score > fishList[counter - 1].collisionCircle.Score)
+                        {
+                            cumulative += 1;
+                            counter -= 1;
+                        }
+                        else
+                            return cumulative;
+                    }
+                    if (greater == -1)
+                    {
+                        if (fishList[counter].collisionCircle.Score < fishList[counter - 1].collisionCircle.Score)
+                        {
+                            cumulative -= 1;
+                            counter -= 1;
+                        }
+                        else
+                            return cumulative;
+                    }
+
+                    if (greater == 0)
+                        return cumulative;
+                }
+            }
+
+            return cumulative;
+        }
+
         public NeuralNetwork[] AddHidden(NeuralNetwork[] neuralNetworkArgs, int percentNegative, int percentHidden)
         {
             List<NeuralNetwork> neuralNetwork = new List<NeuralNetwork>();
