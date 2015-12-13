@@ -10,6 +10,8 @@ namespace Genetic_Fish_Tank.Source
         public int generation = 0;
         public double generationTimer = 0;
 
+        public List<Fish> fittest = new List<Fish>();
+
         public bool GetGenerationState(Fish[] fishList)
         {
             if (generationTimer > 30f)
@@ -26,7 +28,9 @@ namespace Genetic_Fish_Tank.Source
             return true;
         }
 
-        public NeuralNetwork[] AddHidden(NeuralNetwork[] neuralNetworkArgs, int percentNegative)
+        public Fish GetFittest(Fish[] fishList) { return RankFittest(fishList)[0]; }
+
+        public NeuralNetwork[] AddHidden(NeuralNetwork[] neuralNetworkArgs, int percentNegative, int percentHidden)
         {
             List<NeuralNetwork> neuralNetwork = new List<NeuralNetwork>();
             NeuralNetwork neuralNetworkMethods = new NeuralNetwork(0, 0, 0);
@@ -34,32 +38,39 @@ namespace Genetic_Fish_Tank.Source
 
             for (int x = 0; x < neuralNetworkArgs.Length; x++)
             {
-                List<Neuron> input = new List<Neuron>(), hidden = new List<Neuron>(), output = new List<Neuron>();
-
-                foreach (Neuron neuronArgs in neuralNetworkArgs[x].input)
-                    input.Add(neuronArgs);
-
-                foreach (Neuron neuronArgs in neuralNetworkArgs[x].output)
-                    output.Add(neuronArgs);
-
-                for (int y = 0; y < neuralNetworkArgs[x].hidden.Length; y++)
+                if (randomInt < percentHidden)
                 {
-                    hidden.Add(neuralNetworkArgs[x].hidden[y]);
+                    List<Neuron> input = new List<Neuron>(), hidden = new List<Neuron>(), output = new List<Neuron>();
 
-                    if (y == neuralNetworkArgs[x].hidden.Length - 1)
+                    foreach (Neuron neuronArgs in neuralNetworkArgs[x].input)
+                        input.Add(neuronArgs);
+
+                    foreach (Neuron neuronArgs in neuralNetworkArgs[x].output)
+                        output.Add(neuronArgs);
+
+                    for (int y = 0; y < neuralNetworkArgs[x].hidden.Length; y++)
                     {
-                        if (randomInt < percentNegative)
-                            hidden.Add(neuralNetworkMethods.CreateHidden(neuralNetworkArgs[x].hidden.Length, true));
-                        else
-                            hidden.Add(neuralNetworkMethods.CreateHidden(neuralNetworkArgs[x].hidden.Length, false));
+                        hidden.Add(neuralNetworkArgs[x].hidden[y]);
 
-                        neuralNetworkMethods.MutateNeuron(hidden[y + 1], output.ToArray());
-                        neuralNetworkMethods.ConnectInput(input.ToArray(), hidden[y + 1]);
+                        if (y == neuralNetworkArgs[x].hidden.Length - 1)
+                        {
+                            if (randomInt < percentNegative)
+                                hidden.Add(neuralNetworkMethods.CreateHidden(neuralNetworkArgs[x].hidden.Length, true));
+                            else
+                                hidden.Add(neuralNetworkMethods.CreateHidden(neuralNetworkArgs[x].hidden.Length, false));
+
+                            neuralNetworkMethods.MutateNeuron(hidden[y + 1], output.ToArray());
+                            neuralNetworkMethods.ConnectInput(input.ToArray(), hidden[y + 1]);
+                        }
                     }
-                }
 
-                neuralNetwork.Add(new NeuralNetwork(input.Count, hidden.Count, output.Count));
-                neuralNetwork[x].EstablishExistingNetwork(input.ToArray(), hidden.ToArray(), output.ToArray());
+                    neuralNetwork.Add(new NeuralNetwork(input.Count, hidden.Count, output.Count));
+                    neuralNetwork[x].EstablishExistingNetwork(input.ToArray(), hidden.ToArray(), output.ToArray());
+                }
+                else
+                {
+                    neuralNetwork.Add(neuralNetworkArgs[x]);
+                }
 
                 randomInt = random.Next(101);
             }
@@ -150,16 +161,18 @@ namespace Genetic_Fish_Tank.Source
 
                 for (int y = 0; y < neuralNetworkArgs[0].input.Length; y++)
                 {
-                    bool passable = false;
+                    bool passable = true;
 
                     if (additionalConnections.Count > 0)
                     {
                         while (passable == false)
                         {
+                            passable = true;
+
                             foreach (int z in additionalConnections)
                             {
-                                if (randomInt != z)
-                                    passable = true;
+                                if (randomInt == z)
+                                    passable = false;
                             }
 
                             randomInt = random.Next(neuralNetworkArgs.Length);

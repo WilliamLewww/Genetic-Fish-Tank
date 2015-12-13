@@ -11,7 +11,7 @@ namespace Genetic_Fish_Tank
 
         Source.Tank tank = new Source.Tank();
 
-        public static int theoreticalScreenWidth = 800, theoreticalScreenHeight = 480;
+        public static int theoreticalScreenWidth = 1600, theoreticalScreenHeight = 960;
         public static int screenWidth, screenHeight;
 
         public Game1()

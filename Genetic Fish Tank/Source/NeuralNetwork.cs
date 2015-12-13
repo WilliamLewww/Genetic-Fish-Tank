@@ -43,9 +43,16 @@ namespace Genetic_Fish_Tank.Source
         {
             Neuron newNeuron = new Neuron(neuronArgs.index, neuronArgs.layer);
             newNeuron.negative = negative;
+            int index = -1;
 
-            foreach (Neuron neuron in neuronArgs.connections)
-                newNeuron.connections.Add(neuronListArgs[neuron.index]);
+            for (int x = 0; x < neuronArgs.connections.Count; x++)
+            {
+                index = neuronArgs.connections[x].index;
+                if (index + 1 <= neuronListArgs.Length)
+                {
+                    newNeuron.connections.Add(neuronListArgs[index]);
+                }
+            }
 
             return newNeuron;
         }

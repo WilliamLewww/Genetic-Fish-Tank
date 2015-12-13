@@ -107,6 +107,11 @@ namespace Genetic_Fish_Tank.Source
             brain.SendInput(input);
             brain.UpdateNetwork();
 
+            if (position.X >= Game1.theoreticalScreenWidth) position.X = 0;
+            if (position.X + texture.Width <= 0) position.X = Game1.theoreticalScreenWidth;
+            if (position.Y >= Game1.theoreticalScreenHeight) position.Y = 0;
+            if (position.Y + texture.Height <= 0) position.Y = Game1.theoreticalScreenHeight;
+
             if (brain.GetOutput()[0].value == 1) rotation -= 1;
             if (brain.GetOutput()[1].value == 1) rotation += 1;
             if (brain.GetOutput()[2].value == 1) Swim(.5f);
