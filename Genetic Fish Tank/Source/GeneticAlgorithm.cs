@@ -9,6 +9,7 @@ namespace Genetic_Fish_Tank.Source
 
         public int generation = 0;
         public int generationScore = 0;
+        public int peakScore = 0;
         public double generationTimer = 0;
 
         public List<Fish> fittest = new List<Fish>();
@@ -43,6 +44,8 @@ namespace Genetic_Fish_Tank.Source
                 {
                     generationScore += 1;
                     greater = 1;
+
+                    if (generationScore > peakScore) peakScore = generationScore;
                 }
                 if (fishList[generation].collisionCircle.Score < fishList[generation - 1].collisionCircle.Score)
                 {

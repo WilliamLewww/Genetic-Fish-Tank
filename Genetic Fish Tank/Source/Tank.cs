@@ -51,7 +51,7 @@ namespace Genetic_Fish_Tank.Source
             {
                 geneticAlgorithm.fittest.Add(new Fish(geneticAlgorithm.GetFittest(fishList).brain, geneticAlgorithm.GetFittest(fishList).collisionCircle));
                 Console.WriteLine("Trend: " + geneticAlgorithm.CheckTrend(geneticAlgorithm.fittest.ToArray()));
-                Console.WriteLine("Generation Score: " + geneticAlgorithm.generationScore);
+                Console.WriteLine("Generation Score: " + geneticAlgorithm.generationScore + " Peak Score: " + geneticAlgorithm.peakScore);
 
                 tempFishList = geneticAlgorithm.ExterminatePopulation(fishList, EXTERMINATIONPERCENT);
                 for (int x = 0; x < tempNeuralNetwork.Length; x++)
