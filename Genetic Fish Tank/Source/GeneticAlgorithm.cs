@@ -8,6 +8,7 @@ namespace Genetic_Fish_Tank.Source
         static Random random = new Random();
 
         public int generation = 0;
+        public int generationScore = 0;
         public double generationTimer = 0;
 
         public List<Fish> fittest = new List<Fish>();
@@ -30,18 +31,26 @@ namespace Genetic_Fish_Tank.Source
 
         public Fish GetFittest(Fish[] fishList) { return RankFittest(fishList)[0]; }
 
-        public int CheckTrend(Fish[] fishList)
+        public double CheckTrend(Fish[] fishList)
         {
-            int cumulative = 0;
+            double cumulative = 0;
             int counter = generation;
             int greater = 0;
 
             if (fishList.Length > 1)
             {
                 if (fishList[generation].collisionCircle.Score > fishList[generation - 1].collisionCircle.Score)
+                {
+                    generationScore += 1;
                     greater = 1;
+                }
                 if (fishList[generation].collisionCircle.Score < fishList[generation - 1].collisionCircle.Score)
+                {
+                    generationScore -= 1;
                     greater = -1;
+                }
+                if (fishList[generation].collisionCircle.Score == fishList[generation - 1].collisionCircle.Score)
+                    greater = 2;
 
                 while (counter > 1)
                 {
@@ -60,6 +69,17 @@ namespace Genetic_Fish_Tank.Source
                         if (fishList[counter].collisionCircle.Score < fishList[counter - 1].collisionCircle.Score)
                         {
                             cumulative -= 1;
+                            counter -= 1;
+                        }
+                        else
+                            return cumulative;
+                    }
+
+                    if (greater == 2)
+                    {
+                        if (fishList[counter].collisionCircle.Score == fishList[counter - 1].collisionCircle.Score)
+                        {
+                            cumulative += .01;
                             counter -= 1;
                         }
                         else
