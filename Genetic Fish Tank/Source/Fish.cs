@@ -83,6 +83,18 @@ namespace Genetic_Fish_Tank.Source
             proximitySensor[2] = new ProximitySensor((int)(position.X), (int)(position.Y));
         }
 
+        public Fish(NeuralNetwork newBrain)
+        {
+            texture = content.Load<Texture2D>("Sprites/fish.png");
+            brain = newBrain;
+
+            collisionCircle = new CollisionCircle((int)(position.X - origin.X), (int)(position.Y - origin.Y));
+
+            proximitySensor[0] = new ProximitySensor((int)(position.X), (int)(position.Y));
+            proximitySensor[1] = new ProximitySensor((int)(position.X), (int)(position.Y));
+            proximitySensor[2] = new ProximitySensor((int)(position.X), (int)(position.Y));
+        }
+
         public Fish(NeuralNetwork newBrain, CollisionCircle newCollisionCircle)
         {
             texture = content.Load<Texture2D>("Sprites/fish.png");

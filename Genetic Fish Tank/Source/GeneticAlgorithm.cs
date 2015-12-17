@@ -30,6 +30,28 @@ namespace Genetic_Fish_Tank.Source
             return true;
         }
 
+        public Fish[] ReturnFittestStream(int count)
+        {
+            if (fittest.Count < count)
+                count = fittest.Count;
+
+            Fish[] fishList = new Fish[count];
+            for (int x = 0; x < count; x++)
+            {
+                fishList[x] = new Fish(fittest[x].brain);
+            }
+
+            return fishList;
+        }
+
+        public bool GetTrendState(double trend, double score)
+        {
+            if (trend == .5f || (score <= 0 && trend == .3f))
+                return true;
+
+            return false;
+        }
+
         public Fish GetFittest(Fish[] fishList) { return RankFittest(fishList)[0]; }
 
         public double CheckTrend(Fish[] fishList)
