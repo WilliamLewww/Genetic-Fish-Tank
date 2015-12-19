@@ -8,7 +8,7 @@ namespace Genetic_Fish_Tank.Source
 {
     class Tank
     {
-        static int FOODCOUNT = 40, FISHCOUNT = 20, EXTERMINATIONPERCENT = 50, MUTATIONPERCENT = 100, 
+        static int FOODCOUNT = 40, FISHCOUNT = 20, EXTERMINATIONPERCENT = 50, MUTATIONPERCENT = 25, 
             NEURONMUTATIONPERCENT = 50, NEGATIVEHIDDENPERCENT = 50, ADDITIONALHIDDENPERCENT = 25;
 
         static GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
@@ -50,23 +50,37 @@ namespace Genetic_Fish_Tank.Source
             if (geneticAlgorithm.GetGenerationState(fishList))
             {
                 geneticAlgorithm.fittest.Add(new Fish(geneticAlgorithm.GetFittest(fishList).brain, geneticAlgorithm.GetFittest(fishList).collisionCircle));
-                Console.WriteLine("Trend: " + geneticAlgorithm.CheckTrend(geneticAlgorithm.fittest.ToArray()));
-                Console.WriteLine("Generation Score: " + geneticAlgorithm.generationScore + " Peak Score: " + geneticAlgorithm.peakScore);
+                Console.WriteLine("Generation: " + geneticAlgorithm.generation);
+                Console.WriteLine("Trend: " + geneticAlgorithm.CheckTrend(geneticAlgorithm.fittest.ToArray()) + " TrendState: " + geneticAlgorithm.trendState);
+                Console.WriteLine("Generation Score: " + geneticAlgorithm.generationScore + " Peak Score: " + geneticAlgorithm.peakScore);                
 
-                tempFishList = geneticAlgorithm.ExterminatePopulation(fishList, EXTERMINATIONPERCENT);
-                for (int x = 0; x < tempNeuralNetwork.Length; x++)
+                if (geneticAlgorithm.GetTrendState(geneticAlgorithm.trendState, geneticAlgorithm.generationScore, geneticAlgorithm.ReturnZeroScore(fishList)))
                 {
-                    tempNeuralNetwork[x] = tempFishList[x].brain;
+                    if (geneticAlgorithm.generation < 20)
+                    {
+                        foreach (Fish fish in fishList)
+                            fish.ResetFish();
+                    }
+                    else
+                        fishList = geneticAlgorithm.ReturnFittestStream(fishList.Length);
                 }
-
-                tempNeuralNetwork = geneticAlgorithm.CrossMutate(tempNeuralNetwork, FISHCOUNT);
-                tempNeuralNetwork = geneticAlgorithm.Mutate(tempNeuralNetwork, MUTATIONPERCENT, NEURONMUTATIONPERCENT);
-                tempNeuralNetwork = geneticAlgorithm.AddHidden(tempNeuralNetwork, NEGATIVEHIDDENPERCENT, ADDITIONALHIDDENPERCENT);
-
-                for (int x = 0; x < tempNeuralNetwork.Length; x++)
+                else
                 {
-                    fishList[x].ResetFish(tempNeuralNetwork[x].hidden.Length, tempNeuralNetwork[x]);
-                }
+                    tempFishList = geneticAlgorithm.ExterminatePopulation(fishList, EXTERMINATIONPERCENT);
+                    for (int x = 0; x < tempNeuralNetwork.Length; x++)
+                    {
+                        tempNeuralNetwork[x] = tempFishList[x].brain;
+                    }
+
+                    tempNeuralNetwork = geneticAlgorithm.CrossMutate(tempNeuralNetwork, FISHCOUNT);
+                    tempNeuralNetwork = geneticAlgorithm.Mutate(tempNeuralNetwork, MUTATIONPERCENT, NEURONMUTATIONPERCENT);
+                    tempNeuralNetwork = geneticAlgorithm.AddHidden(tempNeuralNetwork, NEGATIVEHIDDENPERCENT, ADDITIONALHIDDENPERCENT);
+
+                    for (int x = 0; x < tempNeuralNetwork.Length; x++)
+                    {
+                        fishList[x].ResetFish(tempNeuralNetwork[x].hidden.Length, tempNeuralNetwork[x]);
+                    }
+                }  
 
                 foodList.Clear();
                 for (int x = 0; x < FOODCOUNT; x++)

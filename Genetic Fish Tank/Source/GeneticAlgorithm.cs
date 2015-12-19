@@ -11,6 +11,7 @@ namespace Genetic_Fish_Tank.Source
         public int generationScore = 0;
         public int peakScore = 0;
         public double generationTimer = 0;
+        public double trendState = 0;
 
         public List<Fish> fittest = new List<Fish>();
 
@@ -38,16 +39,31 @@ namespace Genetic_Fish_Tank.Source
             Fish[] fishList = new Fish[count];
             for (int x = 0; x < count; x++)
             {
-                fishList[x] = new Fish(fittest[x].brain);
+                fishList[x] = new Fish(RankFittest(fittest.ToArray())[x].brain);
             }
+
+            Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!! SET TO FITTEST !!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
             return fishList;
         }
 
-        public bool GetTrendState(double trend, double score)
+        public bool ReturnZeroScore(Fish[] fishList)
         {
-            if (trend == .5f || (score <= 0 && trend == .3f))
+            bool containsZero = true;
+
+            foreach (Fish fish in fishList)
+                if (fish.collisionCircle.Score > 0) containsZero = false;
+
+            return containsZero;
+        }
+
+        public bool GetTrendState(double trend, double score, bool zero)
+        {
+            if (trend == .5f || (score < 0 && trend == .3f) || zero || score < -3)
+            {
+                generationScore = 0;
                 return true;
+            }
 
             return false;
         }
@@ -87,7 +103,10 @@ namespace Genetic_Fish_Tank.Source
                             counter -= 1;
                         }
                         else
+                        {
+                            trendState = cumulative;
                             return cumulative;
+                        }
                     }
                     if (greater == -1)
                     {
@@ -97,7 +116,10 @@ namespace Genetic_Fish_Tank.Source
                             counter -= 1;
                         }
                         else
+                        {
+                            trendState = cumulative;
                             return cumulative;
+                        }
                     }
 
                     if (greater == 2)
@@ -108,14 +130,21 @@ namespace Genetic_Fish_Tank.Source
                             counter -= 1;
                         }
                         else
+                        {
+                            trendState = cumulative;
                             return cumulative;
+                        }
                     }
 
                     if (greater == 0)
+                    {
+                        trendState = cumulative;
                         return cumulative;
+                    }
                 }
             }
 
+            trendState = cumulative;
             return cumulative;
         }
 

@@ -65,6 +65,19 @@ namespace Genetic_Fish_Tank.Source
             rotation = 90;
         }
 
+        public void ResetFish()
+        {
+            brain = new NeuralNetwork(2, random.Next(1, 4), 3);
+            brain.EstablishRandomNetwork();
+
+            position = new Vector2(random.Next((Game1.screenWidth - Game1.theoreticalScreenWidth) / 2, ((Game1.screenWidth - Game1.theoreticalScreenWidth) / 2) + Game1.theoreticalScreenWidth - texture.Width), random.Next((Game1.screenHeight - Game1.theoreticalScreenHeight) / 2, ((Game1.screenHeight - Game1.theoreticalScreenHeight) / 2) + Game1.theoreticalScreenHeight - texture.Height));
+            rectangle = new Rectangle((int)(position.X), (int)(position.Y), texture.Width, texture.Height);
+
+            collisionCircle = new CollisionCircle((int)(position.X - origin.X), (int)(position.Y - origin.Y));
+
+            rotation = 90;
+        }
+
         public Fish()
         {
             texture = content.Load<Texture2D>("Sprites/fish.png");
@@ -88,8 +101,13 @@ namespace Genetic_Fish_Tank.Source
             texture = content.Load<Texture2D>("Sprites/fish.png");
             brain = newBrain;
 
+            position = new Vector2(random.Next((Game1.screenWidth - Game1.theoreticalScreenWidth) / 2, ((Game1.screenWidth - Game1.theoreticalScreenWidth) / 2) + Game1.theoreticalScreenWidth - texture.Width), random.Next((Game1.screenHeight - Game1.theoreticalScreenHeight) / 2, ((Game1.screenHeight - Game1.theoreticalScreenHeight) / 2) + Game1.theoreticalScreenHeight - texture.Height));
+            rectangle = new Rectangle((int)(position.X), (int)(position.Y), texture.Width, texture.Height);
+            origin = new Vector2(texture.Width / 2, texture.Height / 2);
+
             collisionCircle = new CollisionCircle((int)(position.X - origin.X), (int)(position.Y - origin.Y));
 
+            rotation = 90;
             proximitySensor[0] = new ProximitySensor((int)(position.X), (int)(position.Y));
             proximitySensor[1] = new ProximitySensor((int)(position.X), (int)(position.Y));
             proximitySensor[2] = new ProximitySensor((int)(position.X), (int)(position.Y));
@@ -100,8 +118,13 @@ namespace Genetic_Fish_Tank.Source
             texture = content.Load<Texture2D>("Sprites/fish.png");
             brain = newBrain;
 
+            position = new Vector2(random.Next((Game1.screenWidth - Game1.theoreticalScreenWidth) / 2, ((Game1.screenWidth - Game1.theoreticalScreenWidth) / 2) + Game1.theoreticalScreenWidth - texture.Width), random.Next((Game1.screenHeight - Game1.theoreticalScreenHeight) / 2, ((Game1.screenHeight - Game1.theoreticalScreenHeight) / 2) + Game1.theoreticalScreenHeight - texture.Height));
+            rectangle = new Rectangle((int)(position.X), (int)(position.Y), texture.Width, texture.Height);
+            origin = new Vector2(texture.Width / 2, texture.Height / 2);
+
             collisionCircle = newCollisionCircle;
 
+            rotation = 90;
             proximitySensor[0] = new ProximitySensor((int)(position.X), (int)(position.Y));
             proximitySensor[1] = new ProximitySensor((int)(position.X), (int)(position.Y));
             proximitySensor[2] = new ProximitySensor((int)(position.X), (int)(position.Y));
