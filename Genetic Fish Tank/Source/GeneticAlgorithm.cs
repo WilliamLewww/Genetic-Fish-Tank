@@ -31,6 +31,23 @@ namespace Genetic_Fish_Tank.Source
             return true;
         }
 
+        public void CleanFittestList(int count)
+        {
+            if (fittest.Count > count)
+            {
+                List<Fish> tempFittest = new List<Fish>();
+                Fish[] rankedFittest = RankFittest(fittest.ToArray());
+
+                for (int x = 0; x < count; x++)
+                    tempFittest.Add(rankedFittest[x]);
+
+                fittest.Clear();
+
+                foreach (Fish fish in tempFittest)
+                    fittest.Add(new Fish(fish.brain));
+            }
+        }
+
         public Fish[] ReturnFittestStream(int count)
         {
             if (fittest.Count < count)

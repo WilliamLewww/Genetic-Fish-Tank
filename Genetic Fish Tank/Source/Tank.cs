@@ -50,6 +50,7 @@ namespace Genetic_Fish_Tank.Source
             if (geneticAlgorithm.GetGenerationState(fishList))
             {
                 geneticAlgorithm.fittest.Add(new Fish(geneticAlgorithm.GetFittest(fishList).brain, geneticAlgorithm.GetFittest(fishList).collisionCircle));
+                geneticAlgorithm.CleanFittestList(100);
                 Console.WriteLine("Generation: " + geneticAlgorithm.generation);
                 Console.WriteLine("Trend: " + geneticAlgorithm.CheckTrend(geneticAlgorithm.fittest.ToArray()) + " TrendState: " + geneticAlgorithm.trendState);
                 Console.WriteLine("Generation Score: " + geneticAlgorithm.generationScore + " Peak Score: " + geneticAlgorithm.peakScore);                
